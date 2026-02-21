@@ -1,8 +1,8 @@
 import { db } from "@/lib/db";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { currentWorkspace } from "@/lib/current-workspace";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal, Box } from "lucide-react";
 import { CreateServiceDialog } from "@/components/services/create-service-dialog";
 import { CheckoutButton } from "@/components/services/checkout-button";
@@ -56,7 +56,7 @@ export default async function ServicesPage() {
                         </div>
                         <h3 className="text-lg font-semibold text-white">No services created</h3>
                         <p className="mt-2 text-sm text-zinc-400">
-                            You haven't created any services yet. Start by defining your first offering.
+                            You haven&apos;t created any services yet. Start by defining your first offering.
                         </p>
                     </div>
                 </div>

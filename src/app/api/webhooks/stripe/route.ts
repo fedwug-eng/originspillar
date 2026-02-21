@@ -17,8 +17,11 @@ export async function POST(req: Request) {
             signature,
             process.env.STRIPE_WEBHOOK_SECRET!
         );
-    } catch (error: any) {
-        return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
+        }
+        return new NextResponse(`Webhook Error: Unknown Error`, { status: 400 });
     }
 
     const session = event.data.object as Stripe.Checkout.Session;
@@ -32,7 +35,7 @@ export async function POST(req: Request) {
         if (session.subscription && workspaceId) {
             const subscription = await stripe.subscriptions.retrieve(
                 session.subscription as string
-            ) as any;
+            ) as Stripe.Subscription;
 
             await db.subscription.upsert({
                 where: { stripeSubscriptionId: subscription.id },
@@ -62,11 +65,11 @@ export async function POST(req: Request) {
 
     // Handle subscription renewals or payments
     if (event.type === "invoice.payment_succeeded") {
-        const invoice = event.data.object as any;
+        const invoice = event.data.object as Stripe.Invoice;
         const subscriptionId = invoice.subscription as string;
 
         if (subscriptionId) {
-            const subscription = await stripe.subscriptions.retrieve(subscriptionId) as any;
+            const subscription = await stripe.subscriptions.retrieve(subscriptionId) as Stripe.Subscription;
 
             await db.subscription.updateMany({
                 where: { stripeSubscriptionId: subscriptionId },

@@ -47,7 +47,7 @@ export function CreateRequestDialog({ clientId, workspaceId }: { clientId: strin
                     <DialogHeader>
                         <DialogTitle className="text-xl">Submit a Request</DialogTitle>
                         <DialogDescription className="text-zinc-400">
-                            Describe the task or design you need help with. This will go straight to the agency's Kanban board.
+                            Describe the task or design you need help with. This will go straight to the agency&apos;s Kanban board.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-6">

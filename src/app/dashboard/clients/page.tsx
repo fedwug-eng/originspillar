@@ -63,7 +63,7 @@ export default async function ClientsPage() {
                             <Search className="h-6 w-6 text-zinc-500" />
                         </div>
                         <p className="text-zinc-400 font-medium">No clients found.</p>
-                        <p className="text-sm text-zinc-600 mt-1">Click "Add Client" to onboard your first customer.</p>
+                        <p className="text-sm text-zinc-600 mt-1">Click &quot;Add Client&quot; to onboard your first customer.</p>
                     </div>
                 ) : (
                     <div className="divide-y divide-white/5">

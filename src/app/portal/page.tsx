@@ -2,7 +2,6 @@ import { currentUser } from "@/lib/current-workspace";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { CreateRequestDialog } from "@/components/portal/create-request-dialog";
 import { RequestDetailsDialog } from "@/components/requests/request-details-dialog";
 import { CheckCircle2, Clock, PlayCircle } from "lucide-react";

@@ -41,7 +41,7 @@ export default async function DashboardPage() {
             <div>
                 <h2 className="text-3xl font-bold tracking-tight text-white mb-2">Overview</h2>
                 <p className="text-zinc-400">
-                    Here is your agency's performance at a glance.
+                    Here is your agency&apos;s performance at a glance.
                 </p>
             </div>
 

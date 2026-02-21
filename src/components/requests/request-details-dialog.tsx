@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -122,8 +123,8 @@ export function RequestDetailsDialog({ request, currentUserId, trigger }: Props)
                                             </div>
                                             <div
                                                 className={`px-4 py-2 rounded-2xl max-w-[80%] text-sm ${isMe
-                                                        ? "bg-primary text-primary-foreground rounded-tr-sm"
-                                                        : "bg-muted rounded-tl-sm border"
+                                                    ? "bg-primary text-primary-foreground rounded-tr-sm"
+                                                    : "bg-muted rounded-tl-sm border"
                                                     }`}
                                             >
                                                 {comment.text}
