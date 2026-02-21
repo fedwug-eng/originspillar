@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+model Workspace {
+  id               String    @id @default(cuid())
+  name             String
+  slug             String    @unique
+  stripeCustomerId String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  users         User[]
+  services      Service[]
+  clients       Client[]
+  requests      Request[]
+  subscriptions Subscription[]
+  comments      Comment[]
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  firstName   String?
+  lastName    String?
+  clerkUserId String?  @unique
+  role        Role     @default(MEMBER)
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+}
+
+model Client {
+  id               String   @id @default(cuid())
+  name             String
+  contactName      String?
+  email            String
+  status           String   @default("Active")
+  plan             String?
+  stripeCustomerId String?  @unique
+  workspaceId      String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  workspace     Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  requests      Request[]
+  subscriptions Subscription[]
+}
+
+model Service {
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  price           Decimal  @db.Decimal(10, 2)
+  status          String   @default("Active") // Active, Draft, Archived
+  type            String   @default("One-Off") // Recurring, One-Off
+  stripeProductId String?
+  stripePriceId   String?
+  workspaceId     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  requests    Request[]
+}
+
+model Request {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  status      String   @default("Backlog") // Backlog, In Progress, In Review, Completed
+  tag         String?
+  clientId    String
+  serviceId   String?
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  client      Client    @relation(fields: [clientId], references: [id])
+  service     Service?  @relation(fields: [serviceId], references: [id])
+  comments    Comment[]
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  MEMBER
+  CLIENT
+}
+
+model Subscription {
+  id                   String   @id @default(cuid())
+  stripeSubscriptionId String   @unique
+  status               String // active, canceled, past_due
+  amount               Int      @default(0)
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean  @default(false)
+
+  clientId    String?
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  client    Client?   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  text        String
+  requestId   String
+  authorId    String
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  request   Request   @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  author    User      @relation(fields: [authorId], references: [id]) // Assuming author is a User (Agency or Client)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
