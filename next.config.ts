@@ -1,14 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    // Force verbose server logging 
-    serverSourceMaps: false,
-  },
-  webpack: (config) => {
-    config.infrastructureLogging = { debug: /Packer/ }
-    return config
-  }
+  /* config options here */
 };
 
 export default nextConfig;

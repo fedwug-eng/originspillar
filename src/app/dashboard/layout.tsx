@@ -5,6 +5,8 @@ import { siteConfig } from "@/config/site";
 import { currentUser } from "@/lib/current-workspace";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardLayout({ children }: PropsWithChildren) {
     const user = await currentUser();
 

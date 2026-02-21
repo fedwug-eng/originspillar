@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 import { currentWorkspace } from "@/lib/current-workspace";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
     const workspace = await currentWorkspace();
 

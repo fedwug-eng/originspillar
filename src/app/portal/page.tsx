@@ -1,6 +1,9 @@
 import { currentUser } from "@/lib/current-workspace";
 import { db } from "@/lib/db";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreateRequestDialog } from "@/components/portal/create-request-dialog";
 import { RequestDetailsDialog } from "@/components/requests/request-details-dialog";

@@ -4,6 +4,7 @@ import { currentUser } from "@/lib/current-workspace";
 import { redirect } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 
+export const dynamic = "force-dynamic";
 export default async function PortalLayout({ children }: PropsWithChildren) {
     const user = await currentUser();
 
