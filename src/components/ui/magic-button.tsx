@@ -4,7 +4,9 @@ import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-interface MagicButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+import { HTMLMotionProps } from "framer-motion";
+
+interface MagicButtonProps extends Omit<HTMLMotionProps<"button">, "variant"> {
     children: React.ReactNode;
     className?: string;
     variant?: "primary" | "secondary" | "outline";
