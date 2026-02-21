@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build || (echo 'Build failed! Showing logs:' && cat .next/error.log || echo 'No error log found') && exit 1",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate"
