@@ -19,14 +19,14 @@ export default async function PortalLayout({ children }: PropsWithChildren) {
     }
 
     return (
-        <div className="flex min-h-screen flex-col bg-gray-50 text-gray-900 font-sans">
-            <header className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6">
+        <div className="flex min-h-screen flex-col bg-secondary/20 text-foreground font-sans">
+            <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6">
                 <div className="flex items-center gap-3">
-                    <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-md">
-                        <div className="h-2 w-2 rounded-full bg-white" />
+                    <div className="w-7 h-7 rounded-lg bg-gradient-accent flex items-center justify-center shadow-md">
+                        <span className="text-primary-foreground font-bold text-sm">O</span>
                     </div>
-                    <span className="font-bold text-gray-900">{user.workspace.name}</span>
-                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">Client Portal</span>
+                    <span className="font-bold text-foreground">{user.workspace.name}</span>
+                    <span className="text-[10px] font-semibold text-accent-foreground bg-accent px-2.5 py-1 rounded-full">Client Portal</span>
                 </div>
                 <UserButton afterSignOutUrl="/" />
             </header>

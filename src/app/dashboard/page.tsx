@@ -1,5 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, CreditCard, Activity, ArrowUpRight } from "lucide-react";
+import { DollarSign, Users, FolderKanban, ArrowUpRight, Activity, TrendingUp, Clock, ChevronRight } from "lucide-react";
 import { db } from "@/lib/db";
 import { currentWorkspace } from "@/lib/current-workspace";
 import { redirect } from "next/navigation";
@@ -37,121 +36,124 @@ export default async function DashboardPage() {
 
     const estimatedMRR = subscriptions.reduce((sum, sub) => sum + (sub.amount / 100), 0);
 
+    const metrics = [
+        { label: "Monthly Revenue", value: `$${estimatedMRR.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, sub: "Active Stripe Subscriptions", icon: DollarSign, color: "text-op-emerald", bg: "bg-op-emerald/10", change: "+18.2%" },
+        { label: "Active Clients", value: activeClients.toString(), sub: "Across all plans", icon: Users, color: "text-primary", bg: "bg-primary/10", change: `+${activeClients}` },
+        { label: "Open Requests", value: openRequests.toString(), sub: "Backlog, In Progress, Review", icon: FolderKanban, color: "text-op-amber", bg: "bg-op-amber/10", change: String(openRequests) },
+        { label: "Completed", value: completedRequests.toString(), sub: "Delivered successfully", icon: ArrowUpRight, color: "text-primary", bg: "bg-primary/10", change: `+${completedRequests}` },
+    ];
+
+    /* Bar chart placeholder data */
+    const chartData = [40, 55, 35, 70, 45, 80, 50, 90, 60, 75, 85, 95];
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const statusColors: Record<string, string> = {
+        "Backlog": "bg-muted text-muted-foreground",
+        "In Progress": "bg-primary/10 text-primary",
+        "In Review": "bg-op-amber/10 text-op-amber",
+        "Completed": "bg-op-emerald/10 text-op-emerald",
+    };
+
     return (
         <div className="space-y-8">
+            {/* Header */}
             <div>
-                <h2 className="text-2xl font-bold tracking-tight text-gray-900">Overview</h2>
-                <p className="text-gray-500 mt-1">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">Dashboard</h1>
+                <p className="text-muted-foreground mt-1">
                     Your agency&apos;s performance at a glance.
                 </p>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Monthly Revenue</CardTitle>
-                        <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
-                            <CreditCard className="h-4 w-4 text-emerald-600" />
+            {/* Metric Cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {metrics.map((m, i) => (
+                    <div key={i} className="group bg-card border border-border rounded-2xl p-5 hover:border-primary/20 hover:shadow-xl hover:shadow-primary/[0.04] transition-all duration-500">
+                        <div className="flex items-center justify-between mb-3">
+                            <div className={`w-10 h-10 rounded-xl ${m.bg} flex items-center justify-center`}>
+                                <m.icon className={`w-5 h-5 ${m.color}`} />
+                            </div>
+                            <span className="text-[11px] font-semibold text-op-emerald bg-op-emerald/10 px-2 py-0.5 rounded-full">{m.change}</span>
                         </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-gray-900">${estimatedMRR.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                        <p className="text-xs text-gray-400 mt-1">
-                            Active Stripe Subscriptions
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Active Clients</CardTitle>
-                        <div className="h-8 w-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                            <Users className="h-4 w-4 text-blue-600" />
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-gray-900">{activeClients}</div>
-                        <p className="text-xs text-gray-400 mt-1">
-                            Across all plans
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Open Requests</CardTitle>
-                        <div className="h-8 w-8 rounded-lg bg-amber-50 flex items-center justify-center">
-                            <Activity className="h-4 w-4 text-amber-600" />
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-gray-900">{openRequests}</div>
-                        <p className="text-xs text-gray-400 mt-1">
-                            Backlog, In Progress, In Review
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Completed</CardTitle>
-                        <div className="h-8 w-8 rounded-lg bg-violet-50 flex items-center justify-center">
-                            <ArrowUpRight className="h-4 w-4 text-violet-600" />
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-gray-900">{completedRequests}</div>
-                        <p className="text-xs text-gray-400 mt-1">
-                            Delivered successfully
-                        </p>
-                    </CardContent>
-                </Card>
+                        <p className="text-2xl font-bold text-foreground">{m.value}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{m.label}</p>
+                    </div>
+                ))}
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-4 bg-white border border-gray-200 shadow-sm">
-                    <CardHeader>
-                        <CardTitle className="text-gray-900">Activity Chart</CardTitle>
-                        <CardDescription>Request completion volume over the last 30 days.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="pl-2 h-[350px] flex items-center justify-center bg-gray-50 rounded-lg border border-gray-100 m-4 border-dashed relative group overflow-hidden">
-                        <div className="flex items-end gap-2 w-full h-full p-4 opacity-40">
-                            {[40, 70, 45, 90, 65, 80, 50, 100, 70].map((height, i) => (
-                                <div key={i} className="w-full bg-violet-200 border border-violet-300 rounded-t-sm transition-all duration-500 group-hover:bg-violet-400" style={{ height: `${height}%` }} />
-                            ))}
+            {/* Charts + Activity */}
+            <div className="grid gap-6 lg:grid-cols-5">
+                {/* Revenue Chart */}
+                <div className="lg:col-span-3 bg-card border border-border rounded-2xl p-6 hover:border-primary/15 transition-all duration-300">
+                    <div className="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 className="text-base font-bold text-foreground">Revenue Overview</h3>
+                            <p className="text-sm text-muted-foreground">Last 12 months</p>
                         </div>
-                        <p className="text-gray-400 absolute font-medium">Chart Coming Soon</p>
-                    </CardContent>
-                </Card>
+                        <div className="flex items-center gap-1.5 bg-op-emerald/10 px-3 py-1.5 rounded-lg">
+                            <TrendingUp className="w-4 h-4 text-op-emerald" />
+                            <span className="text-sm font-semibold text-op-emerald">+22%</span>
+                        </div>
+                    </div>
+                    <div className="flex items-end gap-2 h-[200px]">
+                        {chartData.map((h, i) => {
+                            const pct = h;
+                            return (
+                                <div key={i} className="flex-1 flex flex-col items-center gap-2">
+                                    <div
+                                        className={`w-full rounded-md transition-all duration-700 ${i >= 10
+                                                ? "bg-gradient-accent shadow-lg shadow-primary/10"
+                                                : i >= 8
+                                                    ? "bg-primary/40"
+                                                    : "bg-primary/15"
+                                            }`}
+                                        style={{ height: `${pct}%` }}
+                                    />
+                                    <span className="text-[10px] text-muted-foreground">{months[i]}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
 
-                <Card className="col-span-3 bg-white border border-gray-200 shadow-sm">
-                    <CardHeader>
-                        <CardTitle className="text-gray-900">Recent Activity</CardTitle>
-                        <CardDescription>
-                            Latest updates on your active requests.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        {recentActivity.length === 0 ? (
-                            <div className="text-center py-12">
-                                <Activity className="h-10 w-10 mx-auto text-gray-300 mb-3" />
-                                <p className="text-sm text-gray-400">No recent activity.</p>
-                                <p className="text-xs text-gray-400 mt-1">Create a request to get started.</p>
+                {/* Recent Activity */}
+                <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-6 hover:border-primary/15 transition-all duration-300">
+                    <div className="flex items-center justify-between mb-5">
+                        <h3 className="text-base font-bold text-foreground">Recent Activity</h3>
+                        <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                    </div>
+
+                    {recentActivity.length === 0 ? (
+                        <div className="text-center py-12">
+                            <div className="w-16 h-16 rounded-2xl bg-accent flex items-center justify-center mx-auto mb-4">
+                                <Activity className="h-7 w-7 text-accent-foreground/40" />
                             </div>
-                        ) : (
-                            <div className="space-y-4">
-                                {recentActivity.map((activity) => (
-                                    <div key={activity.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                                        <div className="space-y-1">
-                                            <p className="text-sm font-medium text-gray-900 leading-none truncate max-w-[200px]">{activity.title}</p>
-                                            <p className="text-sm text-gray-500">{activity.client.name} · <span className="text-violet-600 font-medium">{activity.status}</span></p>
-                                        </div>
-                                        <div className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-md">
-                                            {new Date(activity.updatedAt).toLocaleDateString()}
+                            <p className="text-sm font-medium text-muted-foreground">No activity yet</p>
+                            <p className="text-xs text-muted-foreground/60 mt-1">Create a request to get started.</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-3">
+                            {recentActivity.map((activity) => (
+                                <div key={activity.id} className="flex items-start gap-3 p-3 rounded-xl hover:bg-accent/50 transition-all duration-200">
+                                    <div className="w-8 h-8 rounded-lg bg-primary/8 flex items-center justify-center mt-0.5 shrink-0">
+                                        <Clock className="w-4 h-4 text-primary" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-semibold text-foreground leading-tight truncate">{activity.title}</p>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <span className="text-xs text-muted-foreground">{activity.client.name}</span>
+                                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusColors[activity.status] || "bg-muted text-muted-foreground"}`}>
+                                                {activity.status}
+                                            </span>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                                    <span className="text-[10px] text-muted-foreground/60 shrink-0 mt-1">
+                                        {new Date(activity.updatedAt).toLocaleDateString()}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import Link from "next/link";
-import { LayoutDashboard, Users, FolderKanban, Settings, CreditCard, Box, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, FolderKanban, Settings, CreditCard, Box } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { currentUser } from "@/lib/current-workspace";
 import { redirect } from "next/navigation";
@@ -29,60 +29,64 @@ export default async function DashboardLayout({ children }: PropsWithChildren) {
     ];
 
     return (
-        <div className="flex min-h-screen flex-col md:flex-row bg-gray-50 text-gray-900 font-sans">
+        <div className="flex min-h-screen flex-col md:flex-row bg-secondary/20 text-foreground font-sans">
             {/* Sidebar Navigation */}
-            <aside className="w-full md:w-64 border-r border-gray-200 bg-white hidden md:flex md:flex-col">
-                <div className="flex h-16 items-center border-b border-gray-200 px-6">
-                    <Link href="/" className="flex items-center space-x-2 font-bold tracking-tight">
-                        <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-md">
-                            <div className="h-2 w-2 rounded-full bg-white" />
+            <aside className="w-full md:w-64 border-r border-border bg-card hidden md:flex md:flex-col">
+                {/* Logo */}
+                <div className="flex h-16 items-center border-b border-border px-6">
+                    <Link href="/" className="flex items-center gap-2.5 group">
+                        <div className="w-7 h-7 rounded-lg bg-gradient-accent flex items-center justify-center shadow-md group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
+                            <span className="text-primary-foreground font-bold text-sm">O</span>
                         </div>
-                        <span className="text-lg text-gray-900">{siteConfig.name}</span>
+                        <span className="font-bold text-foreground tracking-tight">{siteConfig.name}</span>
                     </Link>
                 </div>
-                <nav className="flex-1 space-y-1 p-3 mt-2">
+
+                {/* Navigation */}
+                <nav className="flex-1 p-3 mt-1 space-y-0.5">
                     {navItems.map((item) => (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className="flex items-center space-x-3 rounded-lg px-3 py-2.5 text-gray-600 transition-all hover:text-gray-900 hover:bg-gray-100"
+                            className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-muted-foreground transition-all duration-200 hover:text-foreground hover:bg-accent"
                         >
-                            <item.icon className="h-[18px] w-[18px]" />
+                            <item.icon className="h-[18px] w-[18px] transition-colors duration-200 group-hover:text-accent-foreground" />
                             <span className="text-sm font-medium">{item.label}</span>
                         </Link>
                     ))}
                 </nav>
+
                 {/* User Profile */}
-                <div className="border-t border-gray-200 p-4">
+                <div className="border-t border-border p-4">
                     <div className="flex items-center gap-3">
-                        <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "h-8 w-8" } }} />
+                        <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "h-9 w-9" } }} />
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">{user.firstName} {user.lastName}</p>
-                            <p className="text-xs text-gray-500 truncate">{user.workspace.name}</p>
+                            <p className="text-sm font-semibold text-foreground truncate">{user.firstName} {user.lastName}</p>
+                            <p className="text-xs text-muted-foreground truncate">{user.workspace.name}</p>
                         </div>
                     </div>
                 </div>
             </aside>
 
             {/* Mobile Header */}
-            <div className="md:hidden flex items-center justify-between h-14 px-4 border-b border-gray-200 bg-white">
-                <Link href="/" className="flex items-center space-x-2 font-bold">
-                    <div className="h-6 w-6 rounded-md bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center">
-                        <div className="h-1.5 w-1.5 rounded-full bg-white" />
+            <div className="md:hidden flex items-center justify-between h-14 px-4 border-b border-border bg-card">
+                <Link href="/" className="flex items-center gap-2 font-bold">
+                    <div className="w-6 h-6 rounded-md bg-gradient-accent flex items-center justify-center">
+                        <span className="text-primary-foreground font-bold text-[10px]">O</span>
                     </div>
-                    <span className="text-base text-gray-900">{siteConfig.name}</span>
+                    <span className="text-sm font-bold text-foreground">{siteConfig.name}</span>
                 </Link>
                 <UserButton afterSignOutUrl="/" />
             </div>
 
             {/* Mobile Bottom Nav */}
-            <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 px-2 py-1.5">
+            <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-xl border-t border-border px-2 py-1.5">
                 <div className="flex items-center justify-around">
                     {navItems.slice(0, 5).map((item) => (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className="flex flex-col items-center gap-1 px-2 py-1 text-gray-400 hover:text-violet-600 transition-colors"
+                            className="flex flex-col items-center gap-1 px-2 py-1 text-muted-foreground hover:text-primary transition-colors"
                         >
                             <item.icon className="h-5 w-5" />
                             <span className="text-[10px] font-medium">{item.label}</span>
