@@ -7,7 +7,7 @@ const audiences = [
   {
     icon: Palette,
     title: "Design Agencies",
-    description: "Deliver brand assets, manage revisions, and collect payments — all through your own branded portal.",
+    description: "Deliver brand assets, manage revisions, and collect payments, all through your own branded portal.",
     gradient: "from-pink-500/10 to-primary/5",
   },
   {

@@ -29,7 +29,7 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 
 /* ── Activity feed ── */
 const activities = [
-  { text: "Invoice #087 paid", sub: "$4,800 — Brand Package", icon: CheckCircle2, time: "2m ago" },
+  { text: "Invoice #087 paid", sub: "$4,800 - Brand Package", icon: CheckCircle2, time: "2m ago" },
   { text: "New project started", sub: "E-commerce Redesign", icon: FolderKanban, time: "18m ago" },
   { text: "Client onboarded", sub: "Vertex Labs", icon: Users, time: "1h ago" },
   { text: "Milestone completed", sub: "UI Kit v3.0 delivered", icon: Star, time: "3h ago" },
@@ -69,8 +69,8 @@ const DashboardMockup = () => (
             <div
               key={item.label}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[11px] font-medium transition-colors ${item.active
-                  ? "bg-accent text-accent-foreground"
-                  : "text-muted-foreground"
+                ? "bg-accent text-accent-foreground"
+                : "text-muted-foreground"
                 }`}
             >
               <item.icon className="w-3.5 h-3.5" />
@@ -149,10 +149,10 @@ const DashboardMockup = () => (
                   <div key={i} className="flex-1 flex flex-col items-center gap-1">
                     <div
                       className={`w-full rounded-sm transition-all ${i >= 10
-                          ? "bg-gradient-accent"
-                          : i >= 8
-                            ? "bg-primary/40"
-                            : "bg-primary/15"
+                        ? "bg-gradient-accent"
+                        : i >= 8
+                          ? "bg-primary/40"
+                          : "bg-primary/15"
                         }`}
                       style={{ height: `${pct}%` }}
                     />
@@ -236,7 +236,7 @@ const Hero = () => {
           className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-12"
         >
           One white-labeled platform for payments, projects, and client communication.
-          Stop juggling tools — start scaling your agency.
+          Stop juggling tools. Start scaling your agency.
         </motion.p>
 
         {/* CTAs */}

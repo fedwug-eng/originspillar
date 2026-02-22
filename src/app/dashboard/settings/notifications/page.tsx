@@ -1,95 +1,62 @@
 import Link from "next/link";
-import { ArrowLeft, Mail, Bell as BellIcon, MessageSquare, CreditCard, FolderKanban, Users } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-const notificationGroups = [
-    {
-        title: "Messages",
-        icon: MessageSquare,
-        items: [
-            { label: "New client message", email: true, inapp: true },
-            { label: "Message reply", email: false, inapp: true },
-        ]
-    },
-    {
-        title: "Projects",
-        icon: FolderKanban,
-        items: [
-            { label: "New request submitted", email: true, inapp: true },
-            { label: "Project status changed", email: true, inapp: true },
-            { label: "Task completed", email: false, inapp: true },
-        ]
-    },
-    {
-        title: "Billing",
-        icon: CreditCard,
-        items: [
-            { label: "Invoice paid", email: true, inapp: true },
-            { label: "Payment overdue", email: true, inapp: true },
-        ]
-    },
-    {
-        title: "Clients",
-        icon: Users,
-        items: [
-            { label: "New client onboarded", email: true, inapp: true },
-        ]
-    },
-];
+const GlassCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+    <div className={`bg-white/[0.04] backdrop-blur-md border border-white/[0.06] rounded-2xl ${className}`}>
+        {children}
+    </div>
+);
+
+const ToggleRow = ({ label, description, defaultOn = true }: { label: string; description: string; defaultOn?: boolean }) => (
+    <div className="flex items-center justify-between py-3 border-b border-white/[0.04] last:border-0">
+        <div>
+            <p className="text-sm text-white/75">{label}</p>
+            <p className="text-xs text-white/40">{description}</p>
+        </div>
+        <button className={`w-10 h-6 rounded-full transition-colors duration-300 relative ${defaultOn ? "bg-primary" : "bg-white/[0.1]"}`}>
+            <div className={`w-4 h-4 rounded-full bg-white absolute top-1 transition-all duration-300 ${defaultOn ? "left-5" : "left-1"}`} />
+        </button>
+    </div>
+);
 
 export default function NotificationsSettingsPage() {
     return (
-        <div className="space-y-6 max-w-2xl">
+        <div className="space-y-6 max-w-3xl">
             <div>
-                <Link href="/dashboard/settings" className="text-xs text-dash-muted hover:text-primary transition-colors flex items-center gap-1 mb-3">
-                    <ArrowLeft className="w-3 h-3" /> Back to Settings
+                <Link href="/dashboard/settings" className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors duration-300 mb-4">
+                    <ArrowLeft className="w-4 h-4" /> Back to Settings
                 </Link>
-                <h2 className="text-2xl font-bold tracking-tight text-dash-text">Notifications</h2>
-                <p className="text-dash-muted mt-1">Choose how you want to be notified.</p>
+                <h1 className="text-2xl font-bold text-white/90">Notifications</h1>
+                <p className="text-sm text-white/50 mt-1">Choose how and when you get notified</p>
             </div>
 
-            {notificationGroups.map((group) => (
-                <div key={group.title} className="bg-dash-card backdrop-blur-md border border-dash-border rounded-2xl p-6">
-                    <div className="flex items-center gap-3 mb-5">
-                        <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <group.icon className="w-4 h-4 text-primary" />
-                        </div>
-                        <h3 className="text-sm font-bold text-dash-text">{group.title}</h3>
-                    </div>
-
-                    {/* Header */}
-                    <div className="flex items-center justify-end gap-8 mb-3 pr-1">
-                        <div className="flex items-center gap-1 text-[10px] text-dash-muted uppercase tracking-wider font-semibold">
-                            <Mail className="w-3 h-3" /> Email
-                        </div>
-                        <div className="flex items-center gap-1 text-[10px] text-dash-muted uppercase tracking-wider font-semibold">
-                            <BellIcon className="w-3 h-3" /> In-App
-                        </div>
-                    </div>
-
-                    <div className="space-y-3">
-                        {group.items.map((item) => (
-                            <div key={item.label} className="flex items-center justify-between py-2">
-                                <span className="text-sm text-dash-text">{item.label}</span>
-                                <div className="flex items-center gap-8">
-                                    <ToggleSwitch defaultChecked={item.email} />
-                                    <ToggleSwitch defaultChecked={item.inapp} />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+            <GlassCard className="p-6">
+                <h2 className="text-sm font-semibold text-white/70 mb-2">Email Notifications</h2>
+                <div className="divide-y divide-white/[0.04]">
+                    <ToggleRow label="New project assigned" description="When a new project is added to your account" />
+                    <ToggleRow label="Client messages" description="When a client sends you a message" />
+                    <ToggleRow label="Invoice payments" description="When a client pays an invoice" />
+                    <ToggleRow label="Task updates" description="When tasks are completed or moved" defaultOn={false} />
+                    <ToggleRow label="Weekly summary" description="A digest of your activity every Monday" />
                 </div>
-            ))}
-        </div>
-    );
-}
+            </GlassCard>
 
-function ToggleSwitch({ defaultChecked }: { defaultChecked: boolean }) {
-    return (
-        <label className="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" defaultChecked={defaultChecked} className="sr-only peer" />
-            <div className="w-9 h-5 bg-white/[0.06] rounded-full peer peer-checked:bg-primary/60 transition-all after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-dash-muted after:peer-checked:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4" />
-        </label>
+            <GlassCard className="p-6">
+                <h2 className="text-sm font-semibold text-white/70 mb-2">In-App Notifications</h2>
+                <div className="divide-y divide-white/[0.04]">
+                    <ToggleRow label="Desktop push notifications" description="Browser notifications for important updates" defaultOn={false} />
+                    <ToggleRow label="Sound alerts" description="Play a sound for new notifications" defaultOn={false} />
+                    <ToggleRow label="Badge counter" description="Show unread count on the notification bell" />
+                </div>
+            </GlassCard>
+
+            <div className="flex justify-end">
+                <button className="bg-primary hover:bg-primary/90 text-white text-sm font-medium px-6 py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-primary/20">
+                    Save Preferences
+                </button>
+            </div>
+        </div>
     );
 }

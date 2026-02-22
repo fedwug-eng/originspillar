@@ -26,7 +26,7 @@ const features = [
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-op-emerald" />
               </span>
             </div>
-            <p className="text-xs text-muted-foreground">$5,000.00 — Logo Design Package</p>
+            <p className="text-xs text-muted-foreground">$5,000.00 - Logo Design Package</p>
           </div>
         </div>
         <Progress value={100} className="h-1.5 bg-muted" />
@@ -40,7 +40,7 @@ const features = [
   },
   {
     title: "Magic Routing",
-    description: "Separate agency and client views. Each sees exactly what they need — nothing more.",
+    description: "Separate agency and client views. Each sees exactly what they need, nothing more.",
     icon: GitBranch,
     color: "text-primary",
     bgColor: "bg-primary/10",
@@ -85,7 +85,7 @@ const features = [
         </div>
         <div className="flex justify-start">
           <div className="bg-secondary text-foreground text-xs rounded-2xl rounded-bl-sm px-3.5 py-2.5 max-w-[85%] shadow-sm">
-            <p>Love them — let's go with V2!</p>
+            <p>Love them, let's go with V2!</p>
             <p className="text-[9px] text-muted-foreground mt-0.5">2:35 PM</p>
           </div>
         </div>
@@ -122,9 +122,8 @@ const features = [
               {col.cards.map((card, j) => (
                 <div
                   key={card.name}
-                  className={`bg-secondary rounded-xl p-3 border border-border border-l-2 ${card.color} text-[10px] text-foreground transition-all duration-500 ${
-                    ci === 0 && j === 0 ? "group-hover:translate-x-[calc(200%+0.75rem)] group-hover:-rotate-1 group-hover:shadow-lg group-hover:bg-accent" : ""
-                  }`}
+                  className={`bg-secondary rounded-xl p-3 border border-border border-l-2 ${card.color} text-[10px] text-foreground transition-all duration-500 ${ci === 0 && j === 0 ? "group-hover:translate-x-[calc(200%+0.75rem)] group-hover:-rotate-1 group-hover:shadow-lg group-hover:bg-accent" : ""
+                    }`}
                 >
                   <p className="font-medium">{card.name}</p>
                   <div className="flex items-center justify-between mt-2">

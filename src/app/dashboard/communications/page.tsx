@@ -1,226 +1,204 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, MessageSquare, Send, Paperclip, ChevronRight, ChevronLeft, Folder } from "lucide-react";
+import {
+    MessageSquare, Search, Send, Paperclip, ChevronRight,
+    FolderKanban, Circle, ArrowLeft
+} from "lucide-react";
 
-interface Client {
-    id: string;
-    name: string;
-    email: string;
-}
+type Client = { id: string; name: string; email: string };
+type Conversation = { id: string; clientId: string; requestId: string | null; lastMessageAt: string; lastMessagePreview: string | null; request: { title: string } | null };
+type Message = { id: string; senderId: string; senderType: string; body: string; createdAt: string };
 
-interface Conversation {
-    id: string;
-    clientId: string;
-    requestId: string | null;
-    lastMessageAt: string;
-    lastMessagePreview: string | null;
-    request: { title: string } | null;
-}
+const avatarColors = [
+    "from-primary/60 to-primary/30",
+    "from-emerald-500/50 to-emerald-600/20",
+    "from-amber-500/50 to-amber-600/20",
+    "from-rose-500/50 to-rose-600/20",
+    "from-violet-500/50 to-violet-600/20",
+    "from-cyan-500/50 to-cyan-600/20",
+];
 
-interface Message {
-    id: string;
-    body: string;
-    senderType: string;
-    createdAt: string;
-}
+const GlassCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+    <div className={`bg-white/[0.04] backdrop-blur-md border border-white/[0.06] rounded-2xl ${className}`}>
+        {children}
+    </div>
+);
 
 export default function CommunicationsPage() {
     const [clients, setClients] = useState<Client[]>([]);
     const [conversations, setConversations] = useState<Conversation[]>([]);
-    const [messages, setMessages] = useState<Message[]>([]);
     const [selectedClient, setSelectedClient] = useState<string | null>(null);
     const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [searchQuery, setSearchQuery] = useState("");
     const [messageInput, setMessageInput] = useState("");
-    const [searchTerm, setSearchTerm] = useState("");
-    const [expandedClient, setExpandedClient] = useState<string | null>(null);
-    const [mobileView, setMobileView] = useState<"list" | "chat">("list");
+    const [loadingMessages, setLoadingMessages] = useState(false);
 
-    // Fetch clients and conversations
     useEffect(() => {
-        fetch("/api/communications/clients")
-            .then(r => r.ok ? r.json() : { clients: [], conversations: [] })
-            .then(data => {
-                setClients(data.clients || []);
-                setConversations(data.conversations || []);
-            })
-            .catch(() => { });
+        fetch("/api/communications/clients").then(r => r.json()).then(data => {
+            setClients(data.clients || []);
+            setConversations(data.conversations || []);
+        });
     }, []);
 
-    // Fetch messages when conversation selected
-    useEffect(() => {
-        if (!selectedConversation) return;
-        fetch(`/api/communications/messages?conversationId=${selectedConversation}`)
-            .then(r => r.ok ? r.json() : { messages: [] })
-            .then(data => setMessages(data.messages || []))
-            .catch(() => { });
-    }, [selectedConversation]);
+    const activeClient = clients.find(c => c.id === selectedClient);
+    const clientConversations = conversations.filter(c => c.clientId === selectedClient);
+    const activeConversation = conversations.find(c => c.id === selectedConversation);
 
     const filteredClients = clients.filter(c =>
-        c.name.toLowerCase().includes(searchTerm.toLowerCase())
+        c.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const clientConversations = (clientId: string) =>
-        conversations.filter(c => c.clientId === clientId);
-
-    const selectedClientData = clients.find(c => c.id === selectedClient);
-    const selectedConvData = conversations.find(c => c.id === selectedConversation);
-
-    const handleSend = async () => {
-        if (!messageInput.trim() || !selectedConversation) return;
-        try {
-            const res = await fetch("/api/communications/send", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ conversationId: selectedConversation, body: messageInput }),
-            });
-            if (res.ok) {
-                const msg = await res.json();
-                setMessages(prev => [...prev, msg.message]);
-                setMessageInput("");
-            }
-        } catch { }
+    const loadMessages = async (conversationId: string) => {
+        setLoadingMessages(true);
+        setSelectedConversation(conversationId);
+        const res = await fetch(`/api/communications/messages?conversationId=${conversationId}`);
+        const data = await res.json();
+        setMessages(data.messages || []);
+        setLoadingMessages(false);
     };
 
-    const avatarGradients = [
-        "from-violet-500 to-indigo-600",
-        "from-emerald-500 to-teal-600",
-        "from-amber-500 to-orange-600",
-        "from-rose-500 to-pink-600",
-        "from-blue-500 to-cyan-600",
-    ];
+    const sendMessage = async () => {
+        if (!messageInput.trim() || !selectedConversation) return;
+        const res = await fetch("/api/communications/send", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ conversationId: selectedConversation, body: messageInput }),
+        });
+        if (res.ok) {
+            const data = await res.json();
+            setMessages(prev => [...prev, data.message]);
+            setMessageInput("");
+        }
+    };
 
     return (
-        <div className="h-[calc(100vh-8rem)] flex flex-col">
-            <div className="mb-4">
-                <h2 className="text-2xl font-bold tracking-tight text-dash-text">Communications</h2>
-                <p className="text-dash-muted mt-1">Client conversations organized by project.</p>
+        <div className="h-[calc(100vh-5rem)] flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+                <div>
+                    <h1 className="text-2xl font-bold text-white/90">Communications</h1>
+                    <p className="text-sm text-white/50 mt-1">
+                        {clients.length > 0 ? `${clients.length} clients` : "All caught up"}
+                    </p>
+                </div>
             </div>
 
-            <div className="flex-1 min-h-0 flex gap-4 rounded-2xl overflow-hidden">
-                {/* Left Panel — Client List */}
-                <div className={`${mobileView === "list" ? "flex" : "hidden"} lg:flex w-full lg:w-80 flex-col bg-dash-card backdrop-blur-md border border-dash-border rounded-2xl overflow-hidden shrink-0`}>
+            <GlassCard className="flex-1 flex overflow-hidden min-h-0">
+                {/* Left: Client List */}
+                <div className={`w-80 border-r border-white/[0.06] flex flex-col shrink-0 ${selectedConversation ? "hidden lg:flex" : "flex"}`}>
                     {/* Search */}
-                    <div className="p-3 border-b border-white/[0.06]">
+                    <div className="p-4 border-b border-white/[0.06]">
                         <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-dash-muted" />
+                            <Search className="w-4 h-4 text-white/30 absolute left-3 top-1/2 -translate-y-1/2" />
                             <input
                                 type="text"
                                 placeholder="Search clients..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full h-9 rounded-lg bg-white/[0.04] border border-white/[0.06] pl-9 pr-3 text-sm text-dash-text placeholder:text-dash-muted focus:outline-none focus:border-primary/40 transition-all"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full bg-white/[0.04] border border-white/[0.06] rounded-xl pl-10 pr-4 py-2.5 text-sm text-white/70 placeholder:text-white/20 focus:outline-none focus:border-primary/30 focus:bg-white/[0.06] transition-all"
                             />
                         </div>
                     </div>
 
-                    {/* Client List */}
+                    {/* Client rows */}
                     <div className="flex-1 overflow-y-auto">
-                        {filteredClients.length === 0 ? (
-                            <div className="text-center py-12 text-dash-muted text-sm">
-                                {clients.length === 0 ? "No clients yet" : "No matches"}
-                            </div>
-                        ) : (
-                            filteredClients.map((client, idx) => {
-                                const gradient = avatarGradients[idx % avatarGradients.length];
-                                const convs = clientConversations(client.id);
-                                const isExpanded = expandedClient === client.id;
-                                const lastConv = convs[0];
+                        {filteredClients.map((client, ci) => {
+                            const isSelected = selectedClient === client.id;
+                            const avatar = client.name.substring(0, 2).toUpperCase();
+                            const clientConvos = conversations.filter(c => c.clientId === client.id);
+                            const lastConvo = clientConvos[0];
 
-                                return (
-                                    <div key={client.id}>
-                                        <button
-                                            onClick={() => setExpandedClient(isExpanded ? null : client.id)}
-                                            className={`w-full flex items-center gap-3 p-3 hover:bg-white/[0.04] transition-all text-left ${isExpanded ? "bg-white/[0.04]" : ""}`}
-                                        >
-                                            <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
-                                                {client.name.substring(0, 2).toUpperCase()}
+                            return (
+                                <div key={client.id}>
+                                    <button
+                                        onClick={() => {
+                                            setSelectedClient(isSelected ? null : client.id);
+                                            setSelectedConversation(null);
+                                        }}
+                                        className={`w-full flex items-center gap-3 px-4 py-3.5 text-left transition-all duration-200 hover:bg-white/[0.04] ${isSelected ? "bg-white/[0.06]" : ""}`}
+                                    >
+                                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${avatarColors[ci % avatarColors.length]} flex items-center justify-center border border-white/[0.08] shrink-0`}>
+                                            <span className="text-xs font-bold text-white/80">{avatar}</span>
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center justify-between">
+                                                <p className="text-sm font-medium text-white/80 truncate">{client.name}</p>
+                                                {lastConvo && <span className="text-[10px] text-white/30 shrink-0 ml-2">{new Date(lastConvo.lastMessageAt).toLocaleDateString()}</span>}
                                             </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-semibold text-dash-text truncate">{client.name}</p>
-                                                <p className="text-xs text-dash-muted truncate">{lastConv?.lastMessagePreview || "No messages yet"}</p>
-                                            </div>
-                                            <ChevronRight className={`w-4 h-4 text-dash-muted/40 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
-                                        </button>
+                                            <p className="text-xs text-white/40 truncate mt-0.5">{lastConvo?.lastMessagePreview || client.email}</p>
+                                        </div>
+                                    </button>
 
-                                        {/* Expanded projects */}
-                                        {isExpanded && (
-                                            <div className="bg-white/[0.02] border-t border-white/[0.04]">
-                                                {convs.length === 0 ? (
-                                                    <p className="text-xs text-dash-muted p-3 pl-16">No conversations</p>
-                                                ) : (
-                                                    convs.map(conv => (
-                                                        <button
-                                                            key={conv.id}
-                                                            onClick={() => {
-                                                                setSelectedClient(client.id);
-                                                                setSelectedConversation(conv.id);
-                                                                setMobileView("chat");
-                                                            }}
-                                                            className={`w-full flex items-center gap-2.5 px-3 py-2.5 pl-16 text-left hover:bg-white/[0.04] transition-all ${selectedConversation === conv.id ? "bg-primary/10 text-primary" : ""}`}
-                                                        >
-                                                            <Folder className="w-3.5 h-3.5 text-dash-muted shrink-0" />
-                                                            <span className="text-xs font-medium truncate">{conv.request?.title || "General"}</span>
-                                                        </button>
-                                                    ))
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-                                );
-                            })
-                        )}
+                                    {/* Project sub-list */}
+                                    {isSelected && (
+                                        <div className="bg-white/[0.02] border-t border-white/[0.04]">
+                                            {clientConvos.length === 0 ? (
+                                                <div className="pl-12 pr-4 py-2.5">
+                                                    <span className="text-xs text-white/40">No conversations</span>
+                                                </div>
+                                            ) : clientConvos.map(convo => (
+                                                <button
+                                                    key={convo.id}
+                                                    onClick={() => loadMessages(convo.id)}
+                                                    className={`w-full flex items-center gap-3 pl-12 pr-4 py-2.5 text-left transition-all duration-200 hover:bg-white/[0.04] ${selectedConversation === convo.id ? "bg-white/[0.06]" : ""}`}
+                                                >
+                                                    <FolderKanban className="w-3.5 h-3.5 text-primary/60 shrink-0" />
+                                                    <span className="text-xs text-white/60 truncate flex-1">{convo.request?.title || "General"}</span>
+                                                    <ChevronRight className="w-3 h-3 text-white/20 shrink-0" />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
 
-                {/* Right Panel — Chat */}
-                <div className={`${mobileView === "chat" ? "flex" : "hidden"} lg:flex flex-1 flex-col bg-dash-card backdrop-blur-md border border-dash-border rounded-2xl overflow-hidden`}>
-                    {!selectedConversation ? (
-                        <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-                            <div className="w-20 h-20 rounded-2xl bg-white/[0.04] flex items-center justify-center mb-4">
-                                <MessageSquare className="w-9 h-9 text-dash-muted/40" />
-                            </div>
-                            <p className="text-base font-semibold text-dash-muted">Select a client & project</p>
-                            <p className="text-sm text-dash-muted/60 mt-1">Choose a conversation from the left to start messaging.</p>
-                        </div>
-                    ) : (
+                {/* Right: Chat Area */}
+                <div className={`flex-1 flex flex-col min-w-0 ${!selectedConversation ? "hidden lg:flex" : "flex"}`}>
+                    {selectedConversation && activeClient && activeConversation ? (
                         <>
-                            {/* Chat Header */}
-                            <div className="h-16 border-b border-white/[0.06] flex items-center gap-3 px-5 shrink-0">
-                                <button onClick={() => setMobileView("list")} className="lg:hidden text-dash-muted hover:text-white p-1">
-                                    <ChevronLeft className="w-5 h-5" />
+                            {/* Chat header */}
+                            <div className="px-5 py-4 border-b border-white/[0.06] flex items-center gap-3">
+                                <button
+                                    onClick={() => setSelectedConversation(null)}
+                                    className="lg:hidden text-white/40 hover:text-white/70 transition-colors"
+                                >
+                                    <ArrowLeft className="w-4 h-4" />
                                 </button>
-                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
-                                    {selectedClientData?.name.substring(0, 2).toUpperCase() || "??"}
+                                <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${avatarColors[clients.findIndex(c => c.id === selectedClient) % avatarColors.length]} flex items-center justify-center border border-white/[0.08] shrink-0`}>
+                                    <span className="text-xs font-bold text-white/80">{activeClient.name.substring(0, 2).toUpperCase()}</span>
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-bold text-dash-text">{selectedClientData?.name || "Client"}</p>
-                                    <div className="flex items-center gap-1.5 text-xs text-dash-muted">
-                                        <Folder className="w-3 h-3" />
-                                        <span className="truncate">{selectedConvData?.request?.title || "General"}</span>
+                                    <p className="text-sm font-semibold text-white/85">{activeClient.name}</p>
+                                    <div className="flex items-center gap-1.5">
+                                        <FolderKanban className="w-3 h-3 text-primary/60" />
+                                        <span className="text-xs text-white/40">{activeConversation.request?.title || "General"}</span>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-1.5">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                                    <span className="text-xs text-emerald-400">Online</span>
+                                    <Circle className="w-2 h-2 fill-emerald-400 text-emerald-400" />
+                                    <span className="text-[10px] text-emerald-400/80">Online</span>
                                 </div>
                             </div>
 
                             {/* Messages */}
-                            <div className="flex-1 overflow-y-auto p-5 space-y-3">
-                                {messages.length === 0 ? (
-                                    <div className="text-center py-12 text-dash-muted text-sm">
-                                        No messages yet. Start the conversation!
-                                    </div>
+                            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+                                {loadingMessages ? (
+                                    <p className="text-sm text-white/40 text-center">Loading...</p>
+                                ) : messages.length === 0 ? (
+                                    <p className="text-sm text-white/40 text-center">No messages yet. Send the first one!</p>
                                 ) : (
                                     messages.map(msg => (
                                         <div key={msg.id} className={`flex ${msg.senderType === "agency" ? "justify-end" : "justify-start"}`}>
-                                            <div className={`max-w-[70%] rounded-2xl px-4 py-2.5 ${msg.senderType === "agency"
-                                                    ? "bg-primary/20 text-dash-text rounded-br-md"
-                                                    : "bg-white/[0.06] text-dash-text rounded-bl-md"
+                                            <div className={`max-w-[70%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${msg.senderType === "agency"
+                                                    ? "bg-primary/20 text-white/85 rounded-br-md border border-primary/15"
+                                                    : "bg-white/[0.06] text-white/75 rounded-bl-md border border-white/[0.06]"
                                                 }`}>
-                                                <p className="text-sm leading-relaxed">{msg.body}</p>
-                                                <p className="text-[10px] text-dash-muted/60 mt-1">
+                                                <p>{msg.body}</p>
+                                                <p className={`text-[10px] mt-1.5 ${msg.senderType === "agency" ? "text-primary/50" : "text-white/25"}`}>
                                                     {new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                                                 </p>
                                             </div>
@@ -229,31 +207,40 @@ export default function CommunicationsPage() {
                                 )}
                             </div>
 
-                            {/* Input Bar */}
-                            <div className="border-t border-white/[0.06] p-4 flex items-center gap-3">
-                                <button className="text-dash-muted hover:text-white transition-colors p-2">
-                                    <Paperclip className="w-5 h-5" />
-                                </button>
-                                <input
-                                    type="text"
-                                    placeholder="Type a message..."
-                                    value={messageInput}
-                                    onChange={(e) => setMessageInput(e.target.value)}
-                                    onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                                    className="flex-1 h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] px-4 text-sm text-dash-text placeholder:text-dash-muted focus:outline-none focus:border-primary/40 transition-all"
-                                />
-                                <button
-                                    onClick={handleSend}
-                                    disabled={!messageInput.trim()}
-                                    className="w-10 h-10 rounded-xl bg-primary hover:bg-primary/80 flex items-center justify-center text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                                >
-                                    <Send className="w-4 h-4" />
-                                </button>
+                            {/* Message input */}
+                            <div className="p-4 border-t border-white/[0.06]">
+                                <div className="flex items-center gap-3">
+                                    <button className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center hover:bg-white/[0.08] transition-all shrink-0">
+                                        <Paperclip className="w-4 h-4 text-white/40" />
+                                    </button>
+                                    <input
+                                        type="text"
+                                        placeholder="Type a message..."
+                                        value={messageInput}
+                                        onChange={(e) => setMessageInput(e.target.value)}
+                                        onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                                        className="flex-1 bg-white/[0.04] border border-white/[0.06] rounded-xl px-4 py-2.5 text-sm text-white/70 placeholder:text-white/20 focus:outline-none focus:border-primary/30 focus:bg-white/[0.06] transition-all"
+                                    />
+                                    <button onClick={sendMessage} className="w-9 h-9 rounded-xl bg-primary hover:bg-primary/90 flex items-center justify-center transition-all shadow-lg shadow-primary/20 shrink-0">
+                                        <Send className="w-4 h-4 text-white" />
+                                    </button>
+                                </div>
                             </div>
                         </>
+                    ) : (
+                        /* Empty state */
+                        <div className="flex-1 flex items-center justify-center">
+                            <div className="text-center">
+                                <div className="w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center mx-auto mb-4">
+                                    <MessageSquare className="w-7 h-7 text-white/20" />
+                                </div>
+                                <p className="text-sm font-medium text-white/50">Select a client & project</p>
+                                <p className="text-xs text-white/30 mt-1">Choose a conversation to start messaging</p>
+                            </div>
+                        </div>
                     )}
                 </div>
-            </div>
+            </GlassCard>
         </div>
     );
 }

@@ -4,78 +4,78 @@ import { PropsWithChildren, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-    LayoutDashboard, Users, FolderKanban, Settings, CreditCard, Box,
-    MessageSquare, Search, Bell, Menu, X
+    BarChart3, FolderKanban, Users, DollarSign, Settings, Search, Bell,
+    Menu, X, LogOut, Package, MessageSquare
 } from "lucide-react";
 import { UserButton } from "@clerk/nextjs";
 
-const navItems = [
-    { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
-    { href: "/dashboard/requests", label: "Requests", icon: FolderKanban },
-    { href: "/dashboard/communications", label: "Communications", icon: MessageSquare, badge: true },
-    { href: "/dashboard/clients", label: "Clients", icon: Users },
-    { href: "/dashboard/services", label: "Services", icon: Box },
-    { href: "/dashboard/billing", label: "Billing", icon: CreditCard },
-    { href: "/dashboard/settings", label: "Settings", icon: Settings },
+const sidebarLinks = [
+    { label: "Overview", icon: BarChart3, to: "/dashboard", badge: 0 },
+    { label: "Requests", icon: FolderKanban, to: "/dashboard/requests", badge: 0 },
+    { label: "Communications", icon: MessageSquare, to: "/dashboard/communications", badge: 0, useBadge: true },
+    { label: "Clients", icon: Users, to: "/dashboard/clients", badge: 0 },
+    { label: "Services", icon: Package, to: "/dashboard/services", badge: 0 },
+    { label: "Billing", icon: DollarSign, to: "/dashboard/billing", badge: 0 },
+    { label: "Settings", icon: Settings, to: "/dashboard/settings", badge: 0 },
 ];
 
-function SidebarContent({ pathname, unreadCount }: { pathname: string; unreadCount: number }) {
+function SidebarContent({ pathname, unreadCount, onNav }: { pathname: string; unreadCount: number; onNav?: () => void }) {
     return (
         <>
             {/* Logo */}
-            <div className="flex h-16 items-center border-b border-white/[0.06] px-6">
-                <Link href="/" className="flex items-center gap-2.5 group">
-                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/20 group-hover:shadow-violet-500/40 transition-all duration-300">
-                        <span className="text-white font-bold text-sm">O</span>
+            <div className="px-6 py-6 border-b border-white/[0.06] flex items-center justify-between">
+                <Link href="/" className="flex items-center gap-3 cursor-pointer" onClick={onNav}>
+                    <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/15">
+                        <span className="text-sm font-black text-primary">OP</span>
                     </div>
-                    <span className="font-bold text-dash-text tracking-tight text-lg">Originspillar</span>
+                    <span className="text-base font-bold text-white/90 tracking-tight">Originspillar</span>
                 </Link>
             </div>
 
-            {/* Navigation */}
-            <nav className="flex-1 p-3 mt-1 space-y-0.5">
-                {navItems.map((item) => {
-                    const isActive = item.href === "/dashboard"
+            {/* Nav links */}
+            <nav className="flex-1 px-4 py-6 space-y-2">
+                {sidebarLinks.map((link) => {
+                    const isActive = link.to === "/dashboard"
                         ? pathname === "/dashboard"
-                        : pathname.startsWith(item.href);
+                        : pathname.startsWith(link.to);
+                    const badge = link.useBadge ? unreadCount : link.badge;
 
                     return (
                         <Link
-                            key={item.href}
-                            href={item.href}
-                            className={`group flex items-center justify-between rounded-xl px-3 py-2.5 transition-all duration-200 ${isActive
-                                    ? "bg-white/[0.08] text-white border border-white/[0.08] shadow-lg shadow-white/[0.02]"
-                                    : "text-dash-muted hover:text-dash-text hover:bg-white/[0.04] border border-transparent"
+                            key={link.to}
+                            href={link.to}
+                            onClick={onNav}
+                            className={`flex items-center gap-3.5 px-5 py-3.5 rounded-xl text-[15px] font-medium transition-all duration-300 ease-out hover:-translate-y-[1px] hover:shadow-lg hover:shadow-primary/[0.04] ${isActive
+                                    ? "bg-white/[0.08] text-white border border-white/[0.08] shadow-sm shadow-primary/10"
+                                    : "text-white/40 hover:text-white/70 hover:bg-white/[0.06] border border-transparent"
                                 }`}
                         >
-                            <div className="flex items-center gap-3">
-                                <item.icon className={`h-[18px] w-[18px] transition-colors duration-200 ${isActive ? "text-primary" : ""}`} />
-                                <span className="text-sm font-medium">{item.label}</span>
-                            </div>
-                            {item.badge && unreadCount > 0 && (
-                                <span className="flex items-center justify-center min-w-[20px] h-5 rounded-full bg-primary text-[10px] font-bold text-white px-1.5">
-                                    {unreadCount}
-                                </span>
+                            <link.icon className="w-5 h-5" />
+                            <span className="flex-1">{link.label}</span>
+                            {badge > 0 && (
+                                <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shadow shadow-primary/50">
+                                    <span className="text-[10px] font-bold text-white">{badge}</span>
+                                </div>
                             )}
                         </Link>
                     );
                 })}
             </nav>
 
-            {/* User Profile */}
-            <div className="border-t border-white/[0.06] p-4">
-                <div className="flex items-center gap-3">
+            {/* User */}
+            <div className="p-4 border-t border-white/[0.06]">
+                <div className="flex items-center gap-3 px-3 py-2">
                     <UserButton
                         afterSignOutUrl="/"
                         appearance={{
                             elements: {
-                                avatarBox: "h-9 w-9 ring-2 ring-white/10 ring-offset-2 ring-offset-op-navy"
+                                avatarBox: "h-8 w-8"
                             }
                         }}
                     />
                     <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-dash-text truncate">Account</p>
-                        <p className="text-xs text-dash-muted truncate">Manage profile</p>
+                        <p className="text-sm font-semibold text-white/80 truncate">Account</p>
+                        <p className="text-xs text-white/30">Admin</p>
                     </div>
                 </div>
             </div>
@@ -85,65 +85,62 @@ function SidebarContent({ pathname, unreadCount }: { pathname: string; unreadCou
 
 export default function DashboardShell({ children, unreadCount = 0 }: PropsWithChildren<{ unreadCount?: number }>) {
     const pathname = usePathname();
-    const [mobileOpen, setMobileOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
-        <div className="flex min-h-screen flex-col lg:flex-row bg-op-navy text-dash-text font-sans relative overflow-hidden">
-            {/* Ambient glow orbs */}
-            <div className="fixed top-[-20%] left-[-10%] w-[500px] h-[500px] bg-primary/[0.07] rounded-full blur-[120px] pointer-events-none" />
-            <div className="fixed bottom-[-20%] right-[-10%] w-[400px] h-[400px] bg-indigo-500/[0.05] rounded-full blur-[100px] pointer-events-none" />
+        <div className="min-h-screen bg-op-navy flex">
+            {/* Ambient background glows */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute top-0 left-1/3 w-[600px] h-[400px] bg-primary/[0.07] rounded-full blur-[150px]" />
+                <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-primary/[0.05] rounded-full blur-[120px]" />
+            </div>
 
-            {/* Desktop Sidebar */}
-            <aside className="w-64 border-r border-white/[0.06] bg-op-navy/80 backdrop-blur-xl hidden lg:flex lg:flex-col fixed inset-y-0 left-0 z-30">
-                <SidebarContent pathname={pathname} unreadCount={unreadCount} />
-            </aside>
-
-            {/* Mobile Overlay */}
-            {mobileOpen && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" onClick={() => setMobileOpen(false)} />
+            {/* Mobile overlay */}
+            {sidebarOpen && (
+                <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
             )}
 
-            {/* Mobile Sidebar */}
-            <aside className={`fixed inset-y-0 left-0 w-72 bg-op-navy border-r border-white/[0.06] z-50 lg:hidden flex flex-col transform transition-transform duration-300 ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}>
-                <div className="absolute top-4 right-4">
-                    <button onClick={() => setMobileOpen(false)} className="text-dash-muted hover:text-white p-1">
+            {/* Sidebar */}
+            <aside
+                className={`fixed lg:static inset-y-0 left-0 z-50 w-64 flex flex-col border-r border-white/[0.06] bg-white/[0.02] backdrop-blur-xl transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                    }`}
+            >
+                <div className="absolute top-4 right-4 lg:hidden">
+                    <button onClick={() => setSidebarOpen(false)} className="text-white/40">
                         <X className="w-5 h-5" />
                     </button>
                 </div>
-                <SidebarContent pathname={pathname} unreadCount={unreadCount} />
+                <SidebarContent pathname={pathname} unreadCount={unreadCount} onNav={() => setSidebarOpen(false)} />
             </aside>
 
-            {/* Main area */}
-            <div className="flex-1 flex flex-col lg:ml-64">
+            {/* Main content */}
+            <div className="flex-1 flex flex-col min-h-screen relative">
                 {/* Top bar */}
-                <header className="sticky top-0 z-20 h-16 border-b border-white/[0.06] bg-op-navy/80 backdrop-blur-xl flex items-center justify-between px-6 gap-4">
-                    {/* Mobile hamburger */}
-                    <button onClick={() => setMobileOpen(true)} className="lg:hidden text-dash-muted hover:text-white">
-                        <Menu className="w-5 h-5" />
-                    </button>
-
-                    {/* Search */}
-                    <div className="flex-1 max-w-md relative hidden sm:block">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-dash-muted" />
-                        <input
-                            type="text"
-                            placeholder="Search anything..."
-                            className="w-full h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] pl-10 pr-4 text-sm text-dash-text placeholder:text-dash-muted focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all"
-                        />
+                <header className="sticky top-0 z-30 border-b border-white/[0.06] bg-white/[0.02] backdrop-blur-xl px-6 py-4 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <button className="lg:hidden text-white/50" onClick={() => setSidebarOpen(true)}>
+                            <Menu className="w-5 h-5" />
+                        </button>
+                        <div className="relative">
+                            <Search className="w-4 h-4 text-white/30 absolute left-3 top-1/2 -translate-y-1/2" />
+                            <input
+                                type="text"
+                                placeholder="Search anything..."
+                                className="bg-white/[0.04] border border-white/[0.06] rounded-xl pl-10 pr-4 py-2 text-sm text-white/70 placeholder:text-white/20 focus:outline-none focus:border-primary/30 focus:bg-white/[0.06] w-64 transition-all"
+                            />
+                        </div>
                     </div>
-
-                    {/* Notification bell */}
-                    <button className="relative text-dash-muted hover:text-white transition-colors p-2">
-                        <Bell className="w-5 h-5" />
-                        <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <button className="relative w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center hover:bg-white/[0.08] hover:scale-105 hover:shadow-lg hover:shadow-primary/[0.06] transition-all duration-300 ease-out">
+                            <Bell className="w-4 h-4 text-white/40" />
+                            <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-primary shadow shadow-primary/50" />
+                        </button>
+                    </div>
                 </header>
 
-                {/* Content area */}
-                <main className="flex-1 p-6 lg:p-8 relative">
-                    <div className="mx-auto max-w-7xl">
-                        {children}
-                    </div>
+                {/* Page content */}
+                <main className="flex-1 p-6 overflow-auto">
+                    {children}
                 </main>
             </div>
         </div>

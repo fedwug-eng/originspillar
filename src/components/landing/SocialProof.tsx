@@ -5,7 +5,7 @@ import { CreditCard, KanbanSquare, MessageCircle, FolderOpen, ArrowRight } from 
 const tools = [
   {
     category: "Payments",
-    description: "Built-in invoicing and checkout — no third-party billing tool needed",
+    description: "Built-in invoicing and checkout. No third-party billing tool needed",
     icon: CreditCard,
   },
   {
