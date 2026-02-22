@@ -1,7 +1,8 @@
-import { DollarSign, Users, FolderKanban, ArrowUpRight, Activity, TrendingUp, Clock, ChevronRight } from "lucide-react";
+import { DollarSign, Users, FolderKanban, ArrowUpRight, Activity, Clock, ChevronRight } from "lucide-react";
 import { db } from "@/lib/db";
 import { currentWorkspace } from "@/lib/current-workspace";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -12,9 +13,12 @@ export default async function DashboardPage() {
         return redirect("/sign-in");
     }
 
-    const [activeClients, openRequests, completedRequests, recentActivity, subscriptions] = await Promise.all([
+    const [activeClients, totalClients, openRequests, completedRequests, recentActivity, subscriptions, totalServices] = await Promise.all([
         db.client.count({
             where: { workspaceId: workspace.id, status: "Active" }
+        }),
+        db.client.count({
+            where: { workspaceId: workspace.id }
         }),
         db.request.count({
             where: { workspaceId: workspace.id, status: { not: "Completed" } }
@@ -31,24 +35,24 @@ export default async function DashboardPage() {
         db.subscription.findMany({
             where: { workspaceId: workspace.id, status: "active" },
             select: { amount: true }
-        })
+        }),
+        db.service.count({
+            where: { workspaceId: workspace.id }
+        }),
     ]);
 
     const estimatedMRR = subscriptions.reduce((sum, sub) => sum + (sub.amount / 100), 0);
+    const totalRequests = openRequests + completedRequests;
 
     const metrics = [
-        { label: "Monthly Revenue", value: `$${estimatedMRR.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, sub: "Active Stripe Subscriptions", icon: DollarSign, color: "text-op-emerald", bg: "bg-op-emerald/10", change: "+18.2%" },
-        { label: "Active Clients", value: activeClients.toString(), sub: "Across all plans", icon: Users, color: "text-primary", bg: "bg-primary/10", change: `+${activeClients}` },
-        { label: "Open Requests", value: openRequests.toString(), sub: "Backlog, In Progress, Review", icon: FolderKanban, color: "text-op-amber", bg: "bg-op-amber/10", change: String(openRequests) },
-        { label: "Completed", value: completedRequests.toString(), sub: "Delivered successfully", icon: ArrowUpRight, color: "text-primary", bg: "bg-primary/10", change: `+${completedRequests}` },
+        { label: "Monthly Revenue", value: `$${estimatedMRR.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, sub: `${subscriptions.length} active subscription${subscriptions.length !== 1 ? "s" : ""}`, icon: DollarSign, color: "text-op-emerald", bg: "bg-op-emerald/10" },
+        { label: "Active Clients", value: activeClients.toString(), sub: `${totalClients} total client${totalClients !== 1 ? "s" : ""}`, icon: Users, color: "text-primary", bg: "bg-primary/10" },
+        { label: "Open Requests", value: openRequests.toString(), sub: `${totalRequests} total request${totalRequests !== 1 ? "s" : ""}`, icon: FolderKanban, color: "text-op-amber", bg: "bg-op-amber/10" },
+        { label: "Completed", value: completedRequests.toString(), sub: `${totalServices} active service${totalServices !== 1 ? "s" : ""}`, icon: ArrowUpRight, color: "text-primary", bg: "bg-primary/10" },
     ];
 
-    /* Bar chart placeholder data */
-    const chartData = [40, 55, 35, 70, 45, 80, 50, 90, 60, 75, 85, 95];
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
     const statusColors: Record<string, string> = {
-        "Backlog": "bg-muted text-muted-foreground",
+        "Backlog": "bg-secondary text-muted-foreground",
         "In Progress": "bg-primary/10 text-primary",
         "In Review": "bg-op-amber/10 text-op-amber",
         "Completed": "bg-op-emerald/10 text-op-emerald",
@@ -72,54 +76,44 @@ export default async function DashboardPage() {
                             <div className={`w-10 h-10 rounded-xl ${m.bg} flex items-center justify-center`}>
                                 <m.icon className={`w-5 h-5 ${m.color}`} />
                             </div>
-                            <span className="text-[11px] font-semibold text-op-emerald bg-op-emerald/10 px-2 py-0.5 rounded-full">{m.change}</span>
                         </div>
                         <p className="text-2xl font-bold text-foreground">{m.value}</p>
                         <p className="text-xs text-muted-foreground mt-1">{m.label}</p>
+                        <p className="text-[10px] text-muted-foreground/60 mt-0.5">{m.sub}</p>
                     </div>
                 ))}
             </div>
 
-            {/* Charts + Activity */}
+            {/* Quick Links + Activity */}
             <div className="grid gap-6 lg:grid-cols-5">
-                {/* Revenue Chart */}
-                <div className="lg:col-span-3 bg-card border border-border rounded-2xl p-6 hover:border-primary/15 transition-all duration-300">
-                    <div className="flex items-center justify-between mb-6">
-                        <div>
-                            <h3 className="text-base font-bold text-foreground">Revenue Overview</h3>
-                            <p className="text-sm text-muted-foreground">Last 12 months</p>
-                        </div>
-                        <div className="flex items-center gap-1.5 bg-op-emerald/10 px-3 py-1.5 rounded-lg">
-                            <TrendingUp className="w-4 h-4 text-op-emerald" />
-                            <span className="text-sm font-semibold text-op-emerald">+22%</span>
-                        </div>
-                    </div>
-                    <div className="flex items-end gap-2 h-[200px]">
-                        {chartData.map((h, i) => {
-                            const pct = h;
-                            return (
-                                <div key={i} className="flex-1 flex flex-col items-center gap-2">
-                                    <div
-                                        className={`w-full rounded-md transition-all duration-700 ${i >= 10
-                                                ? "bg-gradient-accent shadow-lg shadow-primary/10"
-                                                : i >= 8
-                                                    ? "bg-primary/40"
-                                                    : "bg-primary/15"
-                                            }`}
-                                        style={{ height: `${pct}%` }}
-                                    />
-                                    <span className="text-[10px] text-muted-foreground">{months[i]}</span>
+                {/* Quick Actions */}
+                <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-6 hover:border-primary/15 transition-all duration-300">
+                    <h3 className="text-base font-bold text-foreground mb-5">Quick Actions</h3>
+                    <div className="space-y-2">
+                        {[
+                            { label: "View Requests", href: "/dashboard/requests", icon: FolderKanban, desc: `${openRequests} open` },
+                            { label: "Manage Clients", href: "/dashboard/clients", icon: Users, desc: `${totalClients} total` },
+                            { label: "Billing", href: "/dashboard/billing", icon: DollarSign, desc: `${subscriptions.length} subs` },
+                        ].map((item) => (
+                            <Link key={item.href} href={item.href} className="flex items-center gap-3 p-3 rounded-xl hover:bg-accent/50 transition-all duration-200 group">
+                                <div className="w-9 h-9 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
+                                    <item.icon className="w-4 h-4 text-primary" />
                                 </div>
-                            );
-                        })}
+                                <div className="flex-1">
+                                    <p className="text-sm font-semibold text-foreground">{item.label}</p>
+                                    <p className="text-[11px] text-muted-foreground">{item.desc}</p>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+                            </Link>
+                        ))}
                     </div>
                 </div>
 
                 {/* Recent Activity */}
-                <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-6 hover:border-primary/15 transition-all duration-300">
+                <div className="lg:col-span-3 bg-card border border-border rounded-2xl p-6 hover:border-primary/15 transition-all duration-300">
                     <div className="flex items-center justify-between mb-5">
                         <h3 className="text-base font-bold text-foreground">Recent Activity</h3>
-                        <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                        <Link href="/dashboard/requests" className="text-xs font-medium text-primary hover:underline">View all</Link>
                     </div>
 
                     {recentActivity.length === 0 ? (
@@ -131,7 +125,7 @@ export default async function DashboardPage() {
                             <p className="text-xs text-muted-foreground/60 mt-1">Create a request to get started.</p>
                         </div>
                     ) : (
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                             {recentActivity.map((activity) => (
                                 <div key={activity.id} className="flex items-start gap-3 p-3 rounded-xl hover:bg-accent/50 transition-all duration-200">
                                     <div className="w-8 h-8 rounded-lg bg-primary/8 flex items-center justify-center mt-0.5 shrink-0">
@@ -141,7 +135,7 @@ export default async function DashboardPage() {
                                         <p className="text-sm font-semibold text-foreground leading-tight truncate">{activity.title}</p>
                                         <div className="flex items-center gap-2 mt-1">
                                             <span className="text-xs text-muted-foreground">{activity.client.name}</span>
-                                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusColors[activity.status] || "bg-muted text-muted-foreground"}`}>
+                                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusColors[activity.status] || "bg-secondary text-muted-foreground"}`}>
                                                 {activity.status}
                                             </span>
                                         </div>

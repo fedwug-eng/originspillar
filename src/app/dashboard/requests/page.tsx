@@ -16,7 +16,6 @@ export default async function RequestsPage() {
 
     const workspace = user.workspace;
 
-    // Parallel fetch for speed
     const [requests, clients, services] = await Promise.all([
         db.request.findMany({
             where: { workspaceId: workspace.id },
@@ -41,22 +40,18 @@ export default async function RequestsPage() {
     ]);
 
     return (
-        <div className="space-y-6 h-[calc(100vh-8rem)] flex flex-col animate-in fade-in-50">
+        <div className="space-y-6 h-[calc(100vh-8rem)] flex flex-col">
             <div className="flex items-center justify-between shrink-0">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-white mb-1">Requests</h2>
-                    <p className="text-zinc-400">
-                        Manage and track active client tasks across your pipeline.
+                    <h2 className="text-2xl font-bold tracking-tight text-foreground">Requests</h2>
+                    <p className="text-muted-foreground mt-1">
+                        Manage and track client tasks across your pipeline.
                     </p>
                 </div>
-                <div className="[&>button]:bg-violet-600 [&>button]:text-white [&>button:hover]:bg-violet-500 [&>button]:shadow-[0_0_20px_-5px_rgba(124,58,237,0.5)]">
-                    <CreateRequestDialog clients={clients} services={services} />
-                </div>
+                <CreateRequestDialog clients={clients} services={services} />
             </div>
 
-            <div className="flex-1 overflow-hidden min-h-0 bg-zinc-900/30 border border-white/5 rounded-2xl p-4 backdrop-blur-sm shadow-2xl relative">
-                {/* Subtle Glow inside Kanban container */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-blue-500/5 blur-[100px] rounded-full pointer-events-none -z-10" />
+            <div className="flex-1 overflow-hidden min-h-0 bg-card border border-border rounded-2xl p-4 hover:border-primary/15 transition-all duration-300">
                 <KanbanBoard initialRequests={requests} currentUserId={user.id} />
             </div>
         </div>
