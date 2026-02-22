@@ -1,6 +1,6 @@
 import {
     DollarSign, FolderKanban, Users, CheckCircle2, TrendingUp,
-    ChevronRight, Package, Star, Clock
+    ChevronRight, Package, Star, Clock, Key, MessageSquare
 } from "lucide-react";
 import { db } from "@/lib/db";
 import { currentWorkspace } from "@/lib/current-workspace";
@@ -15,6 +15,18 @@ const GlassCard = ({ children, className = "" }: { children: React.ReactNode; cl
     </div>
 );
 
+function timeAgo(date: Date): string {
+    const diff = Date.now() - date.getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return "just now";
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days}d ago`;
+    return date.toLocaleDateString();
+}
+
 export default async function DashboardPage() {
     const workspace = await currentWorkspace();
 
@@ -22,11 +34,17 @@ export default async function DashboardPage() {
         return redirect("/sign-in");
     }
 
-    const [activeClients, totalClients, openRequests, completedRequests, recentActivity, subscriptions, totalServices] = await Promise.all([
+    const [activeClients, totalClients, openRequests, completedRequests, activityFeed, recentRequests, subscriptions, totalServices] = await Promise.all([
         db.client.count({ where: { workspaceId: workspace.id, status: "Active" } }),
         db.client.count({ where: { workspaceId: workspace.id } }),
         db.request.count({ where: { workspaceId: workspace.id, status: { not: "Completed" } } }),
         db.request.count({ where: { workspaceId: workspace.id, status: "Completed" } }),
+        db.activityLog.findMany({
+            where: { workspaceId: workspace.id },
+            orderBy: { createdAt: "desc" },
+            take: 5,
+            include: { actor: { select: { firstName: true, lastName: true, email: true } } },
+        }),
         db.request.findMany({
             where: { workspaceId: workspace.id },
             orderBy: { updatedAt: "desc" },
@@ -68,13 +86,6 @@ export default async function DashboardPage() {
         { label: "Services", sub: `${totalServices} active`, icon: Package, to: "/dashboard/services", color: "text-amber-400" },
         { label: "Billing", sub: `${subscriptions.length} subscriptions`, icon: DollarSign, to: "/dashboard/billing", color: "text-rose-400" },
     ];
-
-    const statusIcons: Record<string, typeof CheckCircle2> = {
-        "Completed": CheckCircle2,
-        "In Progress": Clock,
-        "In Review": Star,
-        "Backlog": FolderKanban,
-    };
 
     return (
         <div className="space-y-6">
@@ -133,11 +144,54 @@ export default async function DashboardPage() {
                         <Link href="/dashboard/requests" className="text-xs text-primary/70 hover:text-primary transition-colors">View all</Link>
                     </div>
                     <div className="space-y-4">
-                        {recentActivity.length === 0 ? (
-                            <p className="text-sm text-white/40">No activity yet. Create a request to get started.</p>
-                        ) : (
-                            recentActivity.map((a) => {
-                                const Icon = statusIcons[a.status] || FolderKanban;
+                        {activityFeed.length > 0 ? (
+                            activityFeed.map((entry) => {
+                                const actionLabels: Record<string, string> = {
+                                    "request.created": "created a new request",
+                                    "request.updated": "updated a request",
+                                    "client.onboarded": "added a new client",
+                                    "message.sent": "sent a message",
+                                    "invoice.paid": "payment received",
+                                    "apikey.created": "added an API key",
+                                    "apikey.revoked": "revoked an API key",
+                                    "service.created": "created a new service",
+                                };
+                                const typeIconMap: Record<string, typeof FolderKanban> = {
+                                    request: FolderKanban, client: Users, invoice: DollarSign,
+                                    message: MessageSquare, apikey: Key, service: Package,
+                                };
+                                const Icon = typeIconMap[entry.resourceType] || Star;
+                                const label = actionLabels[entry.action] || entry.action;
+                                const actorName = entry.actor.firstName
+                                    ? `${entry.actor.firstName} ${entry.actor.lastName || ""}`.trim()
+                                    : entry.actor.email.split("@")[0];
+                                const meta = entry.metadata as Record<string, unknown> | null;
+                                const detail = meta?.name || meta?.title || "";
+
+                                return (
+                                    <div key={entry.id} className="flex items-start gap-3 group cursor-pointer hover:bg-white/[0.03] -mx-2 px-2 py-1.5 rounded-xl transition-all duration-300 ease-out">
+                                        <div className="w-8 h-8 rounded-lg bg-primary/12 flex items-center justify-center shrink-0 border border-primary/8">
+                                            <Icon className="w-3.5 h-3.5 text-primary" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium text-white/80 leading-tight">
+                                                <span className="text-white/90">{actorName}</span> {label}
+                                            </p>
+                                            {detail && <p className="text-xs text-white/45 truncate">{String(detail)}</p>}
+                                        </div>
+                                        <span className="text-[10px] text-white/35 shrink-0 mt-1">
+                                            {timeAgo(new Date(entry.createdAt))}
+                                        </span>
+                                    </div>
+                                );
+                            })
+                        ) : recentRequests.length > 0 ? (
+                            recentRequests.map((a) => {
+                                const rStatusIcons: Record<string, typeof CheckCircle2> = {
+                                    "Completed": CheckCircle2, "In Progress": Clock,
+                                    "In Review": Star, "Backlog": FolderKanban,
+                                };
+                                const Icon = rStatusIcons[a.status] || FolderKanban;
                                 return (
                                     <div key={a.id} className="flex items-start gap-3 group cursor-pointer hover:bg-white/[0.03] -mx-2 px-2 py-1.5 rounded-xl transition-all duration-300 ease-out">
                                         <div className="w-8 h-8 rounded-lg bg-primary/12 flex items-center justify-center shrink-0 border border-primary/8">
@@ -148,11 +202,13 @@ export default async function DashboardPage() {
                                             <p className="text-xs text-white/45 truncate">{a.client.name}</p>
                                         </div>
                                         <span className="text-[10px] text-white/35 shrink-0 mt-1">
-                                            {new Date(a.updatedAt).toLocaleDateString()}
+                                            {timeAgo(new Date(a.updatedAt))}
                                         </span>
                                     </div>
                                 );
                             })
+                        ) : (
+                            <p className="text-sm text-white/40">No activity yet. Create a request to get started.</p>
                         )}
                     </div>
                 </GlassCard>
@@ -179,10 +235,10 @@ export default async function DashboardPage() {
                             <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
                                 <div
                                     className={`w-full rounded-md transition-all cursor-pointer group-hover:opacity-80 ${i >= 10
-                                            ? "bg-gradient-to-t from-primary to-primary/60 shadow-sm shadow-primary/30"
-                                            : i >= 8
-                                                ? "bg-primary/35"
-                                                : "bg-white/[0.08]"
+                                        ? "bg-gradient-to-t from-primary to-primary/60 shadow-sm shadow-primary/30"
+                                        : i >= 8
+                                            ? "bg-primary/35"
+                                            : "bg-white/[0.08]"
                                         }`}
                                     style={{ height: `${pct}%` }}
                                 />

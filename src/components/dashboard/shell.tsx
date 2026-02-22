@@ -4,10 +4,11 @@ import { PropsWithChildren, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-    BarChart3, FolderKanban, Users, DollarSign, Settings, Search, Bell,
-    Menu, X, LogOut, Package, MessageSquare
+    BarChart3, FolderKanban, Users, DollarSign, Settings, Search,
+    Menu, X, Package, MessageSquare
 } from "lucide-react";
 import { UserButton } from "@clerk/nextjs";
+import NotificationBell from "@/components/dashboard/NotificationBell";
 
 const sidebarLinks = [
     { label: "Overview", icon: BarChart3, to: "/dashboard", badge: 0 },
@@ -131,10 +132,7 @@ export default function DashboardShell({ children, unreadCount = 0 }: PropsWithC
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
-                        <button className="relative w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center hover:bg-white/[0.08] hover:scale-105 hover:shadow-lg hover:shadow-primary/[0.06] transition-all duration-300 ease-out">
-                            <Bell className="w-4 h-4 text-white/40" />
-                            <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-primary shadow shadow-primary/50" />
-                        </button>
+                        <NotificationBell />
                     </div>
                 </header>
 

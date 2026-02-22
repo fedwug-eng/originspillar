@@ -169,6 +169,7 @@ model ActivityLog {
   resourceId   String
   metadata     Json?    // Extra context: { amount, oldStatus, newStatus, etc. }
   workspaceId  String
+  readAt       DateTime?
   createdAt    DateTime @default(now())
 
   actor     User      @relation("ActivityActor", fields: [actorId], references: [id])
