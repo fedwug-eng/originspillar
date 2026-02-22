@@ -457,8 +457,8 @@ export default function InteractiveDemoMockup() {
                                 key={item.id}
                                 onClick={() => setActiveTab(item.id)}
                                 className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-[10px] font-medium transition-all text-left ${activeTab === item.id
-                                        ? "bg-primary/10 text-primary border border-primary/15"
-                                        : "text-muted-foreground hover:text-foreground hover:bg-accent border border-transparent"
+                                    ? "bg-primary/10 text-primary border border-primary/15"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-accent border border-transparent"
                                     }`}
                             >
                                 <item.icon className="w-3.5 h-3.5" />

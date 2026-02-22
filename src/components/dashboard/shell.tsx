@@ -53,8 +53,8 @@ function SidebarContent({ pathname, unreadCount, onNav }: { pathname: string; un
                             href={link.to}
                             onClick={onNav}
                             className={`flex items-center gap-3.5 px-5 py-3 rounded-xl text-[15px] font-medium transition-all duration-200 ${isActive
-                                    ? "bg-primary/10 text-primary border border-primary/15 shadow-sm"
-                                    : "text-muted-foreground hover:text-foreground hover:bg-accent border border-transparent"
+                                ? "bg-primary/10 text-primary border border-primary/15 shadow-sm"
+                                : "text-muted-foreground hover:text-foreground hover:bg-accent border border-transparent"
                                 }`}
                         >
                             <link.icon className="w-5 h-5" />
