@@ -188,7 +188,70 @@
   --chart-2: hsl(160 84% 45%);
   --chart-3: hsl(215 50% 45%);
   --chart-4: hsl(38 92% 55%);
-  --chart-5: hsl(199 89% 55%);
+}
+
+/* ═══════════════════════════════════════ */
+/* ACCENT COLORS                           */
+/* ═══════════════════════════════════════ */
+
+:root.accent-blue {
+  --primary: hsl(213 70% 45%);
+  --sidebar-primary: hsl(213 70% 45%);
+}
+
+.dark.accent-blue {
+  --primary: hsl(213 70% 55%);
+  --sidebar-primary: hsl(213 70% 55%);
+}
+
+:root.accent-indigo {
+  --primary: hsl(239 84% 67%);
+  --sidebar-primary: hsl(239 84% 67%);
+}
+
+.dark.accent-indigo {
+  --primary: hsl(239 84% 75%);
+  --sidebar-primary: hsl(239 84% 75%);
+}
+
+:root.accent-violet {
+  --primary: hsl(262 83% 58%);
+  --sidebar-primary: hsl(262 83% 58%);
+}
+
+.dark.accent-violet {
+  --primary: hsl(262 83% 65%);
+  --sidebar-primary: hsl(262 83% 65%);
+}
+
+:root.accent-emerald {
+  --primary: hsl(160 84% 39%);
+  --sidebar-primary: hsl(160 84% 39%);
+}
+
+.dark.accent-emerald {
+  --primary: hsl(160 84% 45%);
+  --sidebar-primary: hsl(160 84% 45%);
+}
+
+:root.accent-orange {
+  --primary: hsl(24 95% 53%);
+  --sidebar-primary: hsl(24 95% 53%);
+}
+
+.dark.accent-orange {
+  --primary: hsl(24 95% 60%);
+  --sidebar-primary: hsl(24 95% 60%);
+}
+
+:root.accent-rose {
+  --primary: hsl(346 84% 61%);
+  --sidebar-primary: hsl(346 84% 61%);
+}
+
+.dark.accent-rose {
+  --primary: hsl(346 84% 68%);
+  --sidebar-primary: hsl(346 84% 68%);
 }
 
 @theme {

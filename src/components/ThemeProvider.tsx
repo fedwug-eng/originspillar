@@ -3,17 +3,22 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
 type Theme = "light" | "dark" | "system";
+type AccentColor = "Blue" | "Indigo" | "Violet" | "Emerald" | "Orange" | "Rose";
 
 interface ThemeContextType {
     theme: Theme;
     setTheme: (theme: Theme) => void;
     resolvedTheme: "light" | "dark";
+    accentColor: AccentColor;
+    setAccentColor: (color: AccentColor) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
     theme: "dark",
     setTheme: () => { },
     resolvedTheme: "dark",
+    accentColor: "Blue",
+    setAccentColor: () => { },
 });
 
 export const useTheme = () => useContext(ThemeContext);
@@ -26,12 +31,16 @@ function getSystemTheme(): "light" | "dark" {
 export default function ThemeProvider({ children }: { children: ReactNode }) {
     const [theme, setThemeState] = useState<Theme>("dark");
     const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("dark");
+    const [accentColor, setAccentColorState] = useState<AccentColor>("Blue");
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        const stored = localStorage.getItem("theme") as Theme | null;
-        const initial = stored || "dark";
-        setThemeState(initial);
+        const storedTheme = localStorage.getItem("theme") as Theme | null;
+        const storedAccent = localStorage.getItem("accent") as AccentColor | null;
+
+        if (storedTheme) setThemeState(storedTheme);
+        if (storedAccent) setAccentColorState(storedAccent);
+
         setMounted(true);
     }, []);
 
@@ -47,7 +56,21 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
         } else {
             root.classList.remove("dark");
         }
+        localStorage.setItem("theme", theme);
     }, [theme, mounted]);
+
+    useEffect(() => {
+        if (!mounted) return;
+
+        const root = document.documentElement;
+        // Remove existing accent classes
+        const accents: AccentColor[] = ["Blue", "Indigo", "Violet", "Emerald", "Orange", "Rose"];
+        accents.forEach(a => root.classList.remove(`accent-${a.toLowerCase()}`));
+
+        // Add new accent class
+        root.classList.add(`accent-${accentColor.toLowerCase()}`);
+        localStorage.setItem("accent", accentColor);
+    }, [accentColor, mounted]);
 
     // Listen for system theme changes
     useEffect(() => {
@@ -69,7 +92,10 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
 
     const setTheme = (newTheme: Theme) => {
         setThemeState(newTheme);
-        localStorage.setItem("theme", newTheme);
+    };
+
+    const setAccentColor = (newAccent: AccentColor) => {
+        setAccentColorState(newAccent);
     };
 
     // Prevent flash of wrong theme
@@ -78,7 +104,7 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
     }
 
     return (
-        <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>
+        <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme, accentColor, setAccentColor }}>
             {children}
         </ThemeContext.Provider>
     );

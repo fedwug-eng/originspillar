@@ -27,8 +27,7 @@ const accentColors = [
 ];
 
 export default function AppearanceSettingsPage() {
-    const { theme, setTheme } = useTheme();
-    const [activeColor, setActiveColor] = useState("Blue");
+    const { theme, setTheme, accentColor, setAccentColor } = useTheme();
     const [compact, setCompact] = useState(false);
     const [animations, setAnimations] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -62,8 +61,8 @@ export default function AppearanceSettingsPage() {
                             key={t.label}
                             onClick={() => setTheme(t.value)}
                             className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all duration-300 ${theme === t.value
-                                    ? "bg-primary/10 border-primary/30 text-foreground"
-                                    : "bg-accent border-border text-muted-foreground hover:bg-accent/80 hover:border-primary/20"
+                                ? "bg-primary/10 border-primary/30 text-foreground"
+                                : "bg-accent border-border text-muted-foreground hover:bg-accent/80 hover:border-primary/20"
                                 }`}
                         >
                             <t.icon className="w-5 h-5" />
@@ -79,10 +78,10 @@ export default function AppearanceSettingsPage() {
                     {accentColors.map((c) => (
                         <button
                             key={c.name}
-                            onClick={() => setActiveColor(c.name)}
+                            onClick={() => setAccentColor(c.name as any)}
                             className="group text-center"
                         >
-                            <div className={`w-10 h-10 rounded-xl ${c.color} border-2 ${activeColor === c.name ? "border-foreground/40 scale-110" : "border-transparent"} hover:scale-110 transition-all duration-200`} />
+                            <div className={`w-10 h-10 rounded-xl ${c.color} border-2 ${accentColor === c.name ? "border-foreground/40 scale-110" : "border-transparent"} hover:scale-110 transition-all duration-200`} />
                             <p className="text-[10px] text-muted-foreground/50 mt-1.5">{c.name}</p>
                         </button>
                     ))}

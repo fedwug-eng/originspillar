@@ -1,14 +1,17 @@
 "use client";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
 import { ArrowRight, Play } from "lucide-react";
+import Link from "next/link";
+import { useState, useRef } from "react";
 import { staggerContainer, wordReveal } from "@/lib/animations";
 import InteractiveDemoMockup from "./InteractiveDemoMockup";
+import VideoModal from "./VideoModal";
 
 const headline = "Run your productized agency on autopilot.";
 const words = headline.split(" ");
 
 const Hero = () => {
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
   const mockupY = useTransform(scrollY, [0, 800], [0, -80]);
@@ -69,22 +72,18 @@ const Hero = () => {
             <div className="w-72 h-20 bg-primary/8 rounded-full blur-[40px]" />
           </div>
 
-          <motion.a
+          <Link
             href="/sign-up"
-            whileHover={{ scale: 1.03, y: -1 }}
-            whileTap={{ scale: 0.98 }}
             className="relative inline-flex items-center gap-2 bg-foreground text-background font-semibold px-8 py-4 rounded-xl text-base shadow-lg hover:shadow-2xl transition-all duration-300"
           >
             Get Started Free <ArrowRight className="w-4 h-4" />
-          </motion.a>
-          <motion.a
-            href="#features"
-            whileHover={{ scale: 1.03, y: -1 }}
-            whileTap={{ scale: 0.98 }}
-            className="relative inline-flex items-center gap-2 bg-background text-foreground font-semibold px-8 py-4 rounded-xl text-base border border-border hover:border-muted-foreground/30 hover:shadow-lg transition-all duration-300"
+          </Link>
+          <button
+            onClick={() => setIsVideoOpen(true)}
+            className="relative inline-flex items-center gap-2 bg-background text-foreground font-semibold px-8 py-4 rounded-xl text-base border border-border hover:border-muted-foreground/30 hover:shadow-lg transition-all duration-300 cursor-pointer"
           >
             <Play className="w-4 h-4" /> Watch Demo
-          </motion.a>
+          </button>
         </motion.div>
 
         {/* Interactive Dashboard Demo */}
@@ -107,6 +106,9 @@ const Hero = () => {
 
       {/* Section divider */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+
+      {/* Video Modal */}
+      <VideoModal isOpen={isVideoOpen} onClose={() => setIsVideoOpen(false)} />
     </section>
   );
 };

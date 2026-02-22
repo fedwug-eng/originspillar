@@ -1,6 +1,7 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import Link from "next/link";
 import { Check, Zap } from "lucide-react";
 
 const useCountUp = (target: number, duration = 1000) => {
@@ -61,11 +62,10 @@ const PricingCard = ({ tier, i, isAnnual }: { tier: typeof tiers[0]; i: number; 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: i * 0.1 }}
-      className={`relative rounded-2xl p-8 transition-all duration-500 ${
-        tier.featured
-          ? "bg-card border-2 border-primary/30 shadow-2xl shadow-primary/10 scale-[1.03] z-10"
-          : "bg-card border border-border shadow-sm hover:shadow-xl hover:border-primary/15 hover:-translate-y-1"
-      }`}
+      className={`relative rounded-2xl p-8 transition-all duration-500 ${tier.featured
+        ? "bg-card border-2 border-primary/30 shadow-2xl shadow-primary/10 scale-[1.03] z-10"
+        : "bg-card border border-border shadow-sm hover:shadow-xl hover:border-primary/15 hover:-translate-y-1"
+        }`}
     >
       {tier.featured && (
         <>
@@ -105,17 +105,15 @@ const PricingCard = ({ tier, i, isAnnual }: { tier: typeof tiers[0]; i: number; 
         ))}
       </ul>
 
-      <motion.button
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className={`w-full py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 ${
-          tier.featured
-            ? "bg-gradient-accent text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30"
-            : "bg-secondary text-secondary-foreground hover:bg-muted border border-border"
-        }`}
+      <Link
+        href="/sign-up"
+        className={`block w-full text-center py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 ${tier.featured
+          ? "bg-gradient-accent text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30"
+          : "bg-secondary text-secondary-foreground hover:bg-muted border border-border"
+          }`}
       >
         Start 14-Day Free Trial
-      </motion.button>
+      </Link>
     </motion.div>
   );
 };
