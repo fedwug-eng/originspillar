@@ -79,15 +79,20 @@ const Hero = () => {
             Get Started Free <ArrowRight className="w-4 h-4" />
           </Link>
           <button
-            onClick={() => setIsVideoOpen(true)}
+            onClick={() => {
+              const mockup = document.getElementById("interactive-mockup");
+              if (mockup) {
+                mockup.scrollIntoView({ behavior: "smooth", block: "center" });
+              }
+            }}
             className="relative inline-flex items-center gap-2 bg-background text-foreground font-semibold px-8 py-4 rounded-xl text-base border border-border hover:border-muted-foreground/30 hover:shadow-lg transition-all duration-300 cursor-pointer"
           >
-            <Play className="w-4 h-4" /> Watch Demo
+            <Play className="w-4 h-4" /> Try Demo
           </button>
         </motion.div>
 
         {/* Interactive Dashboard Demo */}
-        <div style={{ perspective: 1200 }}>
+        <div style={{ perspective: 1200 }} id="interactive-mockup">
           <motion.div
             style={{ y: mockupY, opacity: mockupOpacity }}
             initial={{ rotateX: 8, opacity: 0, y: 60 }}
