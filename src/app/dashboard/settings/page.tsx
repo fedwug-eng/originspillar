@@ -1,82 +1,43 @@
-import { currentUser } from "@/lib/current-workspace";
-import { redirect } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
-import { User, Building2, Shield, Calendar } from "lucide-react";
+import Link from "next/link";
+import { User, Building2, Bell, Palette, Shield, CreditCard, Key, ChevronRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-export default async function SettingsPage() {
-    const user = await currentUser();
+const settingsSections = [
+    { href: "/dashboard/settings/profile", label: "Profile", desc: "Your personal information and preferences", icon: User, color: "text-primary", bg: "bg-primary/10" },
+    { href: "/dashboard/settings/agency", label: "Agency", desc: "Company details and branding", icon: Building2, color: "text-emerald-400", bg: "bg-emerald-400/10" },
+    { href: "/dashboard/settings/notifications", label: "Notifications", desc: "Email and in-app notification preferences", icon: Bell, color: "text-amber-400", bg: "bg-amber-400/10" },
+    { href: "/dashboard/settings/appearance", label: "Appearance", desc: "Theme and display settings", icon: Palette, color: "text-pink-400", bg: "bg-pink-400/10" },
+    { href: "/dashboard/settings/security", label: "Security", desc: "Password, 2FA, and active sessions", icon: Shield, color: "text-rose-400", bg: "bg-rose-400/10" },
+    { href: "/dashboard/settings/billing", label: "Billing", desc: "Your Originspillar plan and payment method", icon: CreditCard, color: "text-sky-400", bg: "bg-sky-400/10" },
+    { href: "/dashboard/settings/api-keys", label: "API Keys", desc: "Manage integrations and platform access tokens", icon: Key, color: "text-orange-400", bg: "bg-orange-400/10" },
+];
 
-    if (!user) {
-        return redirect("/sign-in");
-    }
-
+export default function SettingsPage() {
     return (
-        <div className="space-y-8">
+        <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold tracking-tight text-foreground">Settings</h1>
-                <p className="text-muted-foreground mt-1">Manage your account and workspace settings.</p>
+                <h2 className="text-2xl font-bold tracking-tight text-dash-text">Settings</h2>
+                <p className="text-dash-muted mt-1">Manage your account and workspace preferences.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Profile Card */}
-                <div className="bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/15 transition-all duration-300">
-                    <div className="px-6 py-5 border-b border-border flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-                            <User className="h-5 w-5 text-primary" />
+            <div className="space-y-2">
+                {settingsSections.map((section) => (
+                    <Link
+                        key={section.href}
+                        href={section.href}
+                        className="flex items-center gap-4 bg-dash-card backdrop-blur-md border border-dash-border rounded-2xl p-5 hover:border-white/[0.12] hover:bg-white/[0.06] transition-all duration-300 group"
+                    >
+                        <div className={`w-11 h-11 rounded-xl ${section.bg} flex items-center justify-center shrink-0`}>
+                            <section.icon className={`w-5 h-5 ${section.color}`} />
                         </div>
-                        <div>
-                            <h3 className="text-base font-bold text-foreground">Profile</h3>
-                            <p className="text-xs text-muted-foreground">Your account information</p>
+                        <div className="flex-1">
+                            <p className="text-sm font-bold text-dash-text">{section.label}</p>
+                            <p className="text-xs text-dash-muted mt-0.5">{section.desc}</p>
                         </div>
-                    </div>
-                    <div className="p-6 space-y-5">
-                        <div className="flex items-center gap-4">
-                            <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "h-16 w-16 ring-2 ring-primary/10 ring-offset-2 ring-offset-card" } }} />
-                            <div>
-                                <p className="text-lg font-bold text-foreground">{user.firstName} {user.lastName}</p>
-                                <p className="text-sm text-muted-foreground">{user.email}</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5">
-                                <Shield className="w-3.5 h-3.5 text-accent-foreground" />
-                                <span className="text-xs font-semibold text-accent-foreground">{user.role}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Workspace Card */}
-                <div className="bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/15 transition-all duration-300">
-                    <div className="px-6 py-5 border-b border-border flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-op-indigo/10 flex items-center justify-center">
-                            <Building2 className="h-5 w-5 text-op-indigo" />
-                        </div>
-                        <div>
-                            <h3 className="text-base font-bold text-foreground">Workspace</h3>
-                            <p className="text-xs text-muted-foreground">Your agency workspace details</p>
-                        </div>
-                    </div>
-                    <div className="p-6 space-y-4">
-                        <div>
-                            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Name</label>
-                            <p className="text-foreground font-semibold mt-1">{user.workspace.name}</p>
-                        </div>
-                        <div>
-                            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Slug</label>
-                            <p className="text-foreground font-mono text-sm bg-secondary px-4 py-2.5 rounded-xl mt-1 border border-border">{user.workspace.slug}</p>
-                        </div>
-                        <div>
-                            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Created</label>
-                            <div className="flex items-center gap-2 mt-1">
-                                <Calendar className="w-4 h-4 text-muted-foreground" />
-                                <p className="text-foreground text-sm">{new Date(user.workspace.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        <ChevronRight className="w-5 h-5 text-dash-muted/40 group-hover:text-primary transition-colors" />
+                    </Link>
+                ))}
             </div>
         </div>
     );

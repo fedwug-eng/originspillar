@@ -63,6 +63,12 @@
   --color-op-gray-900: var(--op-gray-900);
   --color-op-emerald: var(--op-emerald);
   --color-op-amber: var(--op-amber);
+  --color-op-navy: var(--op-navy);
+  --color-op-navy-light: var(--op-navy-light);
+  --color-dash-card: var(--dash-card);
+  --color-dash-border: var(--dash-border);
+  --color-dash-text: var(--dash-text);
+  --color-dash-muted: var(--dash-muted);
 }
 
 :root {
@@ -104,6 +110,12 @@
   --op-gray-900: hsl(222 47% 11%);
   --op-emerald: hsl(160 84% 39%);
   --op-amber: hsl(38 92% 50%);
+  --op-navy: hsl(222 47% 8%);
+  --op-navy-light: hsl(222 33% 12%);
+  --dash-card: hsla(0, 0%, 100%, 0.04);
+  --dash-border: hsla(0, 0%, 100%, 0.06);
+  --dash-text: hsl(210 40% 98%);
+  --dash-muted: hsl(218 11% 55%);
   --sidebar: hsl(0 0% 98%);
   --sidebar-foreground: hsl(240 5.3% 26.1%);
   --sidebar-primary: hsl(240 5.9% 10%);

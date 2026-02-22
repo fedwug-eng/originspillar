@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 model Workspace {
@@ -11,6 +11,14 @@ model Workspace {
   name             String
   slug             String    @unique
   stripeCustomerId String?
+  website          String?
+  industry         String?
+  companySize      String?
+  address          String?
+  logoUrl          String?
+  brandColorPrimary   String?   @default("#7c3aed")
+  brandColorSecondary String?   @default("#4338ca")
+  plan             String    @default("starter")
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
@@ -20,6 +28,10 @@ model Workspace {
   requests      Request[]
   subscriptions Subscription[]
   comments      Comment[]
+  conversations Conversation[]
+  messages      Message[]
+  activityLogs  ActivityLog[]
+  apiKeys       ApiKey[]
 }
 
 model User {
@@ -29,19 +41,30 @@ model User {
   lastName    String?
   clerkUserId String?  @unique
   role        Role     @default(MEMBER)
+  phone       String?
+  bio         String?
+  jobTitle    String?
+  location    String?
   workspaceId String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  comments    Comment[]
+  workspace      Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  comments       Comment[]
+  sentMessages   Message[]      @relation("MessageSender")
+  activityLogs   ActivityLog[]  @relation("ActivityActor")
 }
 
 model Client {
   id               String   @id @default(cuid())
   name             String
+  slug             String?
   contactName      String?
   email            String
+  phone            String?
+  website          String?
+  location         String?
+  notes            String?
   status           String   @default("Active")
   plan             String?
   stripeCustomerId String?  @unique
@@ -52,6 +75,7 @@ model Client {
   workspace     Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   requests      Request[]
   subscriptions Subscription[]
+  conversations Conversation[]
 }
 
 model Service {
@@ -61,6 +85,8 @@ model Service {
   price           Decimal  @db.Decimal(10, 2)
   status          String   @default("Active") // Active, Draft, Archived
   type            String   @default("One-Off") // Recurring, One-Off
+  icon            String?
+  deliverables    Json?    // JSON array of strings
   stripeProductId String?
   stripePriceId   String?
   workspaceId     String
@@ -72,21 +98,26 @@ model Service {
 }
 
 model Request {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
+  slug        String?
   description String?
-  status      String   @default("Backlog") // Backlog, In Progress, In Review, Completed
+  status      String    @default("Backlog") // Backlog, In Progress, In Review, Completed
+  progress    Int       @default(0)
+  budget      Decimal?  @db.Decimal(10, 2)
+  dueDate     DateTime?
   tag         String?
   clientId    String
   serviceId   String?
   workspaceId String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   client      Client    @relation(fields: [clientId], references: [id])
   service     Service?  @relation(fields: [serviceId], references: [id])
   comments    Comment[]
+  conversations Conversation[]
 }
 
 enum Role {
@@ -124,6 +155,70 @@ model Comment {
   updatedAt   DateTime @updatedAt
 
   request   Request   @relation(fields: [requestId], references: [id], onDelete: Cascade)
-  author    User      @relation(fields: [authorId], references: [id]) // Assuming author is a User (Agency or Client)
+  author    User      @relation(fields: [authorId], references: [id])
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── New Models ───────────────────────────────────────────
+
+model ActivityLog {
+  id           String   @id @default(cuid())
+  actorId      String
+  action       String   // e.g. "request.created", "invoice.paid", "client.onboarded"
+  resourceType String   // e.g. "request", "client", "invoice", "service"
+  resourceId   String
+  metadata     Json?    // Extra context: { amount, oldStatus, newStatus, etc. }
+  workspaceId  String
+  createdAt    DateTime @default(now())
+
+  actor     User      @relation("ActivityActor", fields: [actorId], references: [id])
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id                 String    @id @default(cuid())
+  clientId           String
+  requestId          String?   // null = general client chat
+  lastMessageAt      DateTime  @default(now())
+  lastMessagePreview String?
+  workspaceId        String
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  client    Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  request   Request?  @relation(fields: [requestId], references: [id], onDelete: SetNull)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  messages  Message[]
+
+  @@unique([clientId, requestId])
+}
+
+model Message {
+  id             String    @id @default(cuid())
+  conversationId String
+  senderId       String
+  senderType     String    @default("agency") // "agency" or "client"
+  body           String
+  readAt         DateTime?
+  workspaceId    String
+  createdAt      DateTime  @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("MessageSender", fields: [senderId], references: [id])
+  workspace    Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model ApiKey {
+  id          String   @id @default(cuid())
+  name        String   // e.g. "Zapier Integration", "Stripe Live Key"
+  keyType     String   @default("external") // "external" (agency-owned) or "platform" (Originspillar-generated)
+  keyHash     String   // For platform keys: bcrypt hash. For external: encrypted value
+  keyPrefix   String   // First 8 chars for display (e.g. "op_live_a" or "sk_live_")
+  status      String   @default("active") // "active" or "revoked"
+  lastUsedAt  DateTime?
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 }

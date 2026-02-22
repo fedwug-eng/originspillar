@@ -43,15 +43,15 @@ export default async function RequestsPage() {
         <div className="space-y-6 h-[calc(100vh-8rem)] flex flex-col">
             <div className="flex items-center justify-between shrink-0">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-foreground">Requests</h2>
-                    <p className="text-muted-foreground mt-1">
-                        Manage and track client tasks across your pipeline.
+                    <h2 className="text-2xl font-bold tracking-tight text-dash-text">Requests</h2>
+                    <p className="text-dash-muted mt-1">
+                        {requests.length} total request{requests.length !== 1 ? "s" : ""} in your pipeline.
                     </p>
                 </div>
                 <CreateRequestDialog clients={clients} services={services} />
             </div>
 
-            <div className="flex-1 overflow-hidden min-h-0 bg-card border border-border rounded-2xl p-4 hover:border-primary/15 transition-all duration-300">
+            <div className="flex-1 overflow-hidden min-h-0 bg-dash-card backdrop-blur-md border border-dash-border rounded-2xl p-4 hover:border-white/[0.12] transition-all duration-300">
                 <KanbanBoard initialRequests={requests} currentUserId={user.id} />
             </div>
         </div>
