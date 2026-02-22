@@ -197,9 +197,106 @@ function OverviewView({ onNav }: { onNav: (id: string) => void }) {
 
 function RequestsView() {
     const [clickedReq, setClickedReq] = useState<number | null>(null);
+    const [viewingReq, setViewingReq] = useState<number | null>(null);
+
+    if (viewingReq !== null) {
+        const req = requests[viewingReq];
+        const isEcommerce = req.title === "E-commerce Redesign";
+
+        return (
+            <div className="space-y-3 relative animate-in fade-in slide-in-from-right-4 duration-300">
+                <button
+                    onClick={() => setViewingReq(null)}
+                    className="flex items-center gap-1 text-[9px] text-muted-foreground hover:text-foreground transition-colors mb-2 cursor-pointer"
+                >
+                    <ChevronRight className="w-3 h-3 rotate-180" /> Back to Requests
+                </button>
+                <div className="flex items-start justify-between">
+                    <div>
+                        <div className="flex items-center gap-2 mb-1">
+                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                                <FolderKanban className="w-4 h-4 text-primary" />
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-bold text-foreground">{req.title}</h3>
+                                <p className="text-[10px] text-muted-foreground">{req.client}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <span className={`text-[8px] font-medium px-2 py-1 rounded ${req.color}`}>{req.status}</span>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 mt-4">
+                    <div className="bg-muted/30 rounded-xl p-3 border border-border/50">
+                        <p className="text-[8px] text-muted-foreground mb-1">Due Date</p>
+                        <p className="text-[10px] font-semibold flex items-center gap-1"><Clock className="w-3 h-3" /> {req.due}</p>
+                    </div>
+                    <div className="bg-muted/30 rounded-xl p-3 border border-border/50">
+                        <p className="text-[8px] text-muted-foreground mb-1">Budget</p>
+                        <p className="text-[10px] font-semibold flex items-center gap-1"><DollarSign className="w-3 h-3" /> {req.amount}</p>
+                    </div>
+                    <div className="bg-muted/30 rounded-xl p-3 border border-border/50">
+                        <p className="text-[8px] text-muted-foreground mb-1">Progress</p>
+                        <div className="flex items-center justify-between mb-1">
+                            <span className="text-[10px] font-semibold">{req.progress}%</span>
+                        </div>
+                        <div className="h-1 bg-muted rounded-full overflow-hidden">
+                            <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${req.progress}%` }} />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Mock Details Content */}
+                <div className="mt-4 border border-border rounded-xl bg-card overflow-hidden">
+                    <div className="border-b border-border px-4 py-2 bg-muted/20 flex gap-4">
+                        <span className="text-[9px] font-medium text-primary border-b-2 border-primary pb-1 cursor-pointer">Overview</span>
+                        <span className="text-[9px] font-medium text-muted-foreground pb-1 hover:text-foreground cursor-pointer transition-colors">Tasks</span>
+                        <span className="text-[9px] font-medium text-muted-foreground pb-1 hover:text-foreground cursor-pointer transition-colors">Files</span>
+                    </div>
+                    <div className="p-4">
+                        {isEcommerce ? (
+                            <div className="space-y-4">
+                                <div>
+                                    <h4 className="text-[10px] font-bold text-foreground mb-1">Project Brief</h4>
+                                    <p className="text-[9px] text-muted-foreground leading-relaxed">
+                                        Complete redesign of the Vertex Labs e-commerce platform. Goals include improving conversion rates, enhancing mobile usability, and modernizing the overall aesthetic to match recent brand guidelines.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 className="text-[10px] font-bold text-foreground mb-2">Recent Updates</h4>
+                                    <div className="space-y-2">
+                                        <div className="flex gap-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
+                                            <div>
+                                                <p className="text-[9px] font-medium text-foreground">Initial wireframes approved</p>
+                                                <p className="text-[8px] text-muted-foreground">Client signed off on homepage and product page layouts.</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0 animate-pulse" />
+                                            <div>
+                                                <p className="text-[9px] font-medium text-foreground">UI Design in progress</p>
+                                                <p className="text-[8px] text-muted-foreground">Working on high-fidelity mockups for cart and checkout flows.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="py-6 flex flex-col items-center justify-center text-center">
+                                <Search className="w-6 h-6 text-muted-foreground/30 mb-2" />
+                                <h4 className="text-[10px] font-medium text-foreground/80 mb-1">No brief available</h4>
+                                <p className="text-[8px] text-muted-foreground max-w-[200px]">This project does not have a detailed brief or recent updates listed yet.</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="space-y-3">
+        <div className="space-y-3 animate-in fade-in zoom-in-95 duration-300">
             <div className="flex items-center justify-between">
                 <div><p className="text-sm font-bold text-foreground">Requests</p><p className="text-[10px] text-muted-foreground">{requests.length} total requests</p></div>
                 <button
@@ -216,7 +313,10 @@ function RequestsView() {
                         key={i}
                         onClick={() => {
                             setClickedReq(i);
-                            setTimeout(() => setClickedReq(null), 300);
+                            setTimeout(() => {
+                                setClickedReq(null);
+                                setViewingReq(i);
+                            }, 150);
                         }}
                         className={`bg-card border border-border rounded-xl p-3 transition-all cursor-pointer group ${clickedReq === i ? 'scale-95 bg-accent ring-1 ring-primary' : 'hover:border-primary/40 hover:shadow-md'}`}
                     >
