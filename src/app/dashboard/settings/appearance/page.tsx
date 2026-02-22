@@ -1,7 +1,8 @@
-import Link from "next/link";
-import { ArrowLeft, Sun, Moon, Monitor } from "lucide-react";
+"use client";
 
-export const dynamic = "force-dynamic";
+import { useState } from "react";
+import Link from "next/link";
+import { ArrowLeft, Sun, Moon, Monitor, Check, Loader2 } from "lucide-react";
 
 const GlassCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
     <div className={`bg-white/[0.04] backdrop-blur-md border border-white/[0.06] rounded-2xl ${className}`}>
@@ -10,9 +11,9 @@ const GlassCard = ({ children, className = "" }: { children: React.ReactNode; cl
 );
 
 const themes = [
-    { label: "Light", icon: Sun, active: false },
-    { label: "Dark", icon: Moon, active: true },
-    { label: "System", icon: Monitor, active: false },
+    { label: "Light", icon: Sun },
+    { label: "Dark", icon: Moon },
+    { label: "System", icon: Monitor },
 ];
 
 const accentColors = [
@@ -25,6 +26,23 @@ const accentColors = [
 ];
 
 export default function AppearanceSettingsPage() {
+    const [activeTheme, setActiveTheme] = useState("Dark");
+    const [activeColor, setActiveColor] = useState("Purple");
+    const [compact, setCompact] = useState(false);
+    const [animations, setAnimations] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [saved, setSaved] = useState(false);
+
+    const handleSave = () => {
+        setSaving(true);
+        setSaved(false);
+        setTimeout(() => {
+            setSaving(false);
+            setSaved(true);
+            setTimeout(() => setSaved(false), 2000);
+        }, 600);
+    };
+
     return (
         <div className="space-y-6 max-w-3xl">
             <div>
@@ -41,7 +59,8 @@ export default function AppearanceSettingsPage() {
                     {themes.map((t) => (
                         <button
                             key={t.label}
-                            className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all duration-300 ${t.active
+                            onClick={() => setActiveTheme(t.label)}
+                            className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all duration-300 ${activeTheme === t.label
                                     ? "bg-primary/10 border-primary/30 text-white/90"
                                     : "bg-white/[0.03] border-white/[0.06] text-white/50 hover:bg-white/[0.06] hover:border-white/[0.1]"
                                 }`}
@@ -57,8 +76,12 @@ export default function AppearanceSettingsPage() {
                 <h2 className="text-sm font-semibold text-white/70 mb-4">Accent Color</h2>
                 <div className="flex items-center gap-3">
                     {accentColors.map((c) => (
-                        <button key={c.name} className="group text-center">
-                            <div className={`w-10 h-10 rounded-xl ${c.color} border-2 ${c.name === "Purple" ? "border-white/40 scale-110" : "border-transparent"} hover:scale-110 transition-all duration-200`} />
+                        <button
+                            key={c.name}
+                            onClick={() => setActiveColor(c.name)}
+                            className="group text-center"
+                        >
+                            <div className={`w-10 h-10 rounded-xl ${c.color} border-2 ${activeColor === c.name ? "border-white/40 scale-110" : "border-transparent"} hover:scale-110 transition-all duration-200`} />
                             <p className="text-[10px] text-white/30 mt-1.5">{c.name}</p>
                         </button>
                     ))}
@@ -73,8 +96,11 @@ export default function AppearanceSettingsPage() {
                             <p className="text-sm text-white/75">Compact mode</p>
                             <p className="text-xs text-white/40">Reduce spacing and padding</p>
                         </div>
-                        <button className="w-10 h-6 rounded-full bg-white/[0.1] relative transition-colors">
-                            <div className="w-4 h-4 rounded-full bg-white absolute top-1 left-1 transition-all" />
+                        <button
+                            onClick={() => setCompact(!compact)}
+                            className={`w-10 h-6 rounded-full relative transition-colors duration-300 ${compact ? "bg-primary" : "bg-white/[0.1]"}`}
+                        >
+                            <div className={`w-4 h-4 rounded-full bg-white absolute top-1 transition-all duration-300 ${compact ? "left-5" : "left-1"}`} />
                         </button>
                     </div>
                     <div className="flex items-center justify-between">
@@ -82,16 +108,24 @@ export default function AppearanceSettingsPage() {
                             <p className="text-sm text-white/75">Animations</p>
                             <p className="text-xs text-white/40">Enable transition effects</p>
                         </div>
-                        <button className="w-10 h-6 rounded-full bg-primary relative transition-colors">
-                            <div className="w-4 h-4 rounded-full bg-white absolute top-1 left-5 transition-all" />
+                        <button
+                            onClick={() => setAnimations(!animations)}
+                            className={`w-10 h-6 rounded-full relative transition-colors duration-300 ${animations ? "bg-primary" : "bg-white/[0.1]"}`}
+                        >
+                            <div className={`w-4 h-4 rounded-full bg-white absolute top-1 transition-all duration-300 ${animations ? "left-5" : "left-1"}`} />
                         </button>
                     </div>
                 </div>
             </GlassCard>
 
             <div className="flex justify-end">
-                <button className="bg-primary hover:bg-primary/90 text-white text-sm font-medium px-6 py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-primary/20">
-                    Save Preferences
+                <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white text-sm font-medium px-6 py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-primary/20 disabled:opacity-50"
+                >
+                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : null}
+                    {saved ? "Saved!" : "Save Preferences"}
                 </button>
             </div>
         </div>
