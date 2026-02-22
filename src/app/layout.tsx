@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/site";
 import { ClerkProvider } from "@clerk/nextjs";
+import ThemeProvider from "@/components/ThemeProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -15,6 +16,9 @@ export const metadata: Metadata = {
     template: `%s - ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -24,13 +28,15 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" className="dark" suppressHydrationWarning>
         <body
           className={`${inter.variable} min-h-screen bg-background font-sans antialiased`}
         >
-          <div className="relative flex min-h-screen flex-col">
-            <main className="flex-1">{children}</main>
-          </div>
+          <ThemeProvider>
+            <div className="relative flex min-h-screen flex-col">
+              <main className="flex-1">{children}</main>
+            </div>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

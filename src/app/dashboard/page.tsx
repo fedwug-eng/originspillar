@@ -10,7 +10,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 const GlassCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-    <div className={`bg-white/[0.04] backdrop-blur-md border border-white/[0.06] rounded-2xl transition-all duration-300 ease-out hover:-translate-y-[2px] hover:shadow-xl hover:shadow-primary/[0.06] hover:border-white/[0.1] ${className}`}>
+    <div className={`bg-card border border-border rounded-2xl transition-all duration-300 ease-out hover:-translate-y-[2px] hover:shadow-xl hover:shadow-primary/[0.06] hover:border-primary/20 ${className}`}>
         {children}
     </div>
 );
@@ -58,16 +58,14 @@ export default async function DashboardPage() {
         db.service.count({ where: { workspaceId: workspace.id, status: "Active" } }),
     ]);
 
-    const estimatedMRR = subscriptions.reduce((sum, sub) => sum + (sub.amount / 100), 0);
+    const estimatedMRR = subscriptions.reduce((sum: number, sub: { amount: number }) => sum + (sub.amount / 100), 0);
     const totalRequests = openRequests + completedRequests;
 
-    // Revenue by month (real data)
     const revenueData: number[] = new Array(12).fill(0);
-    subscriptions.forEach((sub) => {
+    subscriptions.forEach((sub: { amount: number; currentPeriodStart: Date }) => {
         const month = new Date(sub.currentPeriodStart).getMonth();
         revenueData[month] += sub.amount / 100;
     });
-    // If no subscription data, use placeholder shape
     const hasRealData = revenueData.some(v => v > 0);
     const displayData = hasRealData ? revenueData : [28, 32, 35, 31, 38, 42, 39, 46, 52, 48, 55, 62];
     const maxVal = Math.max(...displayData);
@@ -82,56 +80,55 @@ export default async function DashboardPage() {
 
     const quickActions = [
         { label: "View Requests", sub: `${openRequests} open`, icon: FolderKanban, to: "/dashboard/requests", color: "text-primary" },
-        { label: "Manage Clients", sub: `${totalClients} total`, icon: Users, to: "/dashboard/clients", color: "text-emerald-400" },
-        { label: "Services", sub: `${totalServices} active`, icon: Package, to: "/dashboard/services", color: "text-amber-400" },
-        { label: "Billing", sub: `${subscriptions.length} subscriptions`, icon: DollarSign, to: "/dashboard/billing", color: "text-rose-400" },
+        { label: "Manage Clients", sub: `${totalClients} total`, icon: Users, to: "/dashboard/clients", color: "text-emerald-500" },
+        { label: "Services", sub: `${totalServices} active`, icon: Package, to: "/dashboard/services", color: "text-amber-500" },
+        { label: "Billing", sub: `${subscriptions.length} subscriptions`, icon: DollarSign, to: "/dashboard/billing", color: "text-rose-500" },
     ];
 
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-white/90">Dashboard</h1>
-                <p className="text-sm text-white/50 mt-1">Your agency&apos;s performance at a glance.</p>
+                <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+                <p className="text-sm text-muted-foreground mt-1">Your agency&apos;s performance at a glance.</p>
             </div>
 
             {/* Metric cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {metrics.map((m, i) => (
-                    <GlassCard key={i} className="p-5 hover:bg-white/[0.06] transition-colors group">
+                    <GlassCard key={i} className="p-5 hover:bg-accent/50 transition-colors group">
                         <div className="flex items-center justify-between mb-3">
-                            <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center border border-primary/10">
+                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/15">
                                 <m.icon className="w-5 h-5 text-primary" />
                             </div>
-                            <span className="text-xs font-semibold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-md">{m.change}</span>
+                            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">{m.change}</span>
                         </div>
-                        <p className="text-2xl font-bold text-white/90">{m.value}</p>
-                        <p className="text-xs text-white/50 mt-1">{m.label}</p>
+                        <p className="text-2xl font-bold text-foreground">{m.value}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{m.label}</p>
                     </GlassCard>
                 ))}
             </div>
 
             {/* Quick Actions + Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {/* Quick Actions */}
                 <GlassCard className="p-6">
-                    <h2 className="text-base font-semibold text-white/80 mb-4">Quick Actions</h2>
+                    <h2 className="text-base font-semibold text-foreground/80 mb-4">Quick Actions</h2>
                     <div className="space-y-2">
                         {quickActions.map((a, i) => (
                             <Link
                                 key={i}
                                 href={a.to}
-                                className="flex items-center justify-between p-3.5 rounded-xl hover:bg-white/[0.05] transition-all duration-300 ease-out cursor-pointer group"
+                                className="flex items-center justify-between p-3.5 rounded-xl hover:bg-accent transition-all duration-200 cursor-pointer group"
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/8">
+                                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/10">
                                         <a.icon className={`w-5 h-5 ${a.color}`} />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-white/80 group-hover:text-white transition-colors">{a.label}</p>
-                                        <p className="text-xs text-white/40">{a.sub}</p>
+                                        <p className="text-sm font-medium text-foreground/80 group-hover:text-foreground transition-colors">{a.label}</p>
+                                        <p className="text-xs text-muted-foreground">{a.sub}</p>
                                     </div>
                                 </div>
-                                <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-white/50 transition-colors" />
+                                <ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-muted-foreground transition-colors" />
                             </Link>
                         ))}
                     </div>
@@ -140,28 +137,25 @@ export default async function DashboardPage() {
                 {/* Activity feed */}
                 <GlassCard className="p-6">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-base font-semibold text-white/80">Recent Activity</h2>
+                        <h2 className="text-base font-semibold text-foreground/80">Recent Activity</h2>
                         <Link href="/dashboard/requests" className="text-xs text-primary/70 hover:text-primary transition-colors">View all</Link>
                     </div>
                     <div className="space-y-4">
                         {activityFeed.length > 0 ? (
                             activityFeed.map((entry) => {
-                                const actionLabels: Record<string, string> = {
+                                const actionLabelsMap: Record<string, string> = {
                                     "request.created": "created a new request",
-                                    "request.updated": "updated a request",
                                     "client.onboarded": "added a new client",
                                     "message.sent": "sent a message",
-                                    "invoice.paid": "payment received",
                                     "apikey.created": "added an API key",
                                     "apikey.revoked": "revoked an API key",
-                                    "service.created": "created a new service",
                                 };
                                 const typeIconMap: Record<string, typeof FolderKanban> = {
                                     request: FolderKanban, client: Users, invoice: DollarSign,
                                     message: MessageSquare, apikey: Key, service: Package,
                                 };
                                 const Icon = typeIconMap[entry.resourceType] || Star;
-                                const label = actionLabels[entry.action] || entry.action;
+                                const label = actionLabelsMap[entry.action] || entry.action;
                                 const actorName = entry.actor.firstName
                                     ? `${entry.actor.firstName} ${entry.actor.lastName || ""}`.trim()
                                     : entry.actor.email.split("@")[0];
@@ -169,17 +163,17 @@ export default async function DashboardPage() {
                                 const detail = meta?.name || meta?.title || "";
 
                                 return (
-                                    <div key={entry.id} className="flex items-start gap-3 group cursor-pointer hover:bg-white/[0.03] -mx-2 px-2 py-1.5 rounded-xl transition-all duration-300 ease-out">
-                                        <div className="w-8 h-8 rounded-lg bg-primary/12 flex items-center justify-center shrink-0 border border-primary/8">
+                                    <div key={entry.id} className="flex items-start gap-3 group cursor-pointer hover:bg-accent -mx-2 px-2 py-1.5 rounded-xl transition-all duration-200">
+                                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 border border-primary/10">
                                             <Icon className="w-3.5 h-3.5 text-primary" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-medium text-white/80 leading-tight">
-                                                <span className="text-white/90">{actorName}</span> {label}
+                                            <p className="text-sm font-medium text-foreground/80 leading-tight">
+                                                <span className="text-foreground">{actorName}</span> {label}
                                             </p>
-                                            {detail && <p className="text-xs text-white/45 truncate">{String(detail)}</p>}
+                                            {detail && <p className="text-xs text-muted-foreground truncate">{String(detail)}</p>}
                                         </div>
-                                        <span className="text-[10px] text-white/35 shrink-0 mt-1">
+                                        <span className="text-[10px] text-muted-foreground/60 shrink-0 mt-1">
                                             {timeAgo(new Date(entry.createdAt))}
                                         </span>
                                     </div>
@@ -193,22 +187,22 @@ export default async function DashboardPage() {
                                 };
                                 const Icon = rStatusIcons[a.status] || FolderKanban;
                                 return (
-                                    <div key={a.id} className="flex items-start gap-3 group cursor-pointer hover:bg-white/[0.03] -mx-2 px-2 py-1.5 rounded-xl transition-all duration-300 ease-out">
-                                        <div className="w-8 h-8 rounded-lg bg-primary/12 flex items-center justify-center shrink-0 border border-primary/8">
+                                    <div key={a.id} className="flex items-start gap-3 group cursor-pointer hover:bg-accent -mx-2 px-2 py-1.5 rounded-xl transition-all duration-200">
+                                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 border border-primary/10">
                                             <Icon className="w-3.5 h-3.5 text-primary" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-medium text-white/80 leading-tight">{a.title}</p>
-                                            <p className="text-xs text-white/45 truncate">{a.client.name}</p>
+                                            <p className="text-sm font-medium text-foreground/80 leading-tight">{a.title}</p>
+                                            <p className="text-xs text-muted-foreground truncate">{a.client.name}</p>
                                         </div>
-                                        <span className="text-[10px] text-white/35 shrink-0 mt-1">
+                                        <span className="text-[10px] text-muted-foreground/60 shrink-0 mt-1">
                                             {timeAgo(new Date(a.updatedAt))}
                                         </span>
                                     </div>
                                 );
                             })
                         ) : (
-                            <p className="text-sm text-white/40">No activity yet. Create a request to get started.</p>
+                            <p className="text-sm text-muted-foreground">No activity yet. Create a request to get started.</p>
                         )}
                     </div>
                 </GlassCard>
@@ -218,13 +212,13 @@ export default async function DashboardPage() {
             <GlassCard className="p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div>
-                        <h2 className="text-base font-semibold text-white/80">Revenue Overview</h2>
-                        <p className="text-xs text-white/45">Last 12 months</p>
+                        <h2 className="text-base font-semibold text-foreground/80">Revenue Overview</h2>
+                        <p className="text-xs text-muted-foreground">Last 12 months</p>
                     </div>
                     {estimatedMRR > 0 && (
-                        <div className="flex items-center gap-1.5 bg-emerald-400/10 px-2.5 py-1 rounded-lg border border-emerald-400/10">
-                            <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
-                            <span className="text-xs font-semibold text-emerald-400">${estimatedMRR.toLocaleString()}/mo</span>
+                        <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/10">
+                            <TrendingUp className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">${estimatedMRR.toLocaleString()}/mo</span>
                         </div>
                     )}
                 </div>
@@ -238,11 +232,11 @@ export default async function DashboardPage() {
                                         ? "bg-gradient-to-t from-primary to-primary/60 shadow-sm shadow-primary/30"
                                         : i >= 8
                                             ? "bg-primary/35"
-                                            : "bg-white/[0.08]"
+                                            : "bg-muted"
                                         }`}
                                     style={{ height: `${pct}%` }}
                                 />
-                                <span className="text-[10px] text-white/40">{months[i]}</span>
+                                <span className="text-[10px] text-muted-foreground">{months[i]}</span>
                             </div>
                         );
                     })}

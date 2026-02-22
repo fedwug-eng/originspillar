@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const navLinks = [
   { label: "Features", href: "#features" },
@@ -26,17 +27,22 @@ const Navbar = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
-          ? "bg-background/80 backdrop-blur-2xl border-b border-border/50 shadow-sm py-2.5"
-          : "bg-transparent py-5"
+        ? "bg-background/80 backdrop-blur-2xl border-b border-border/50 shadow-sm py-2.5"
+        : "bg-transparent py-5"
         }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className={`rounded-lg bg-gradient-accent flex items-center justify-center transition-all duration-500 ${scrolled ? "w-7 h-7" : "w-8 h-8"} group-hover:shadow-lg group-hover:shadow-primary/20`}>
-            <span className="text-primary-foreground font-bold text-sm">O</span>
-          </div>
+          <Image
+            src="/logo.png"
+            alt="Origins Pillar"
+            width={32}
+            height={32}
+            className={`rounded-lg object-contain transition-all duration-500 ${scrolled ? "w-7 h-7" : "w-8 h-8"}`}
+            priority
+          />
           <span className={`font-bold text-foreground tracking-tight transition-all duration-500 ${scrolled ? "text-base" : "text-lg"}`}>
-            Originspillar
+            Origins Pillar
           </span>
         </Link>
 

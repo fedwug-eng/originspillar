@@ -49,7 +49,7 @@ const BuiltFor = () => (
           Built for agencies like yours
         </h2>
         <p className="text-xl text-muted-foreground">
-          Whether you're a team of 2 or 200, Originspillar adapts to how you work.
+          Whether you're a team of 2 or 200, Origins Pillar adapts to how you work.
         </p>
       </motion.div>
 

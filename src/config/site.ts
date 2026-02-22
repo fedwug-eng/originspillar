@@ -2,13 +2,13 @@
 // By centralizing these, we can easily change the name across the entire app later.
 
 export const siteConfig = {
-  name: "Originspillar",
+  name: "Origins Pillar",
   description: "The complete operations platform for design subscription agencies.",
-  url: "https://originspillar.com",
-  ogImage: "https://originspillar.com/og.jpg",
+  url: "https://Origins Pillar.com",
+  ogImage: "https://Origins Pillar.com/og.jpg",
   links: {
-    twitter: "https://twitter.com/originspillar",
-    github: "https://github.com/originspillar",
+    twitter: "https://twitter.com/Origins Pillar",
+    github: "https://github.com/Origins Pillar",
   },
 };
 

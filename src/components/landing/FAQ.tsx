@@ -9,8 +9,8 @@ const faqs = [
     a: "Sign up with no credit card required. You get full access to all Pro features for 14 days. If you love it, choose a plan. If not, no strings attached.",
   },
   {
-    q: "Can my clients see the Originspillar branding?",
-    a: "No. Your client portal is fully white-labeled. Clients see your agency name, your brand colors, and your domain. Originspillar stays invisible.",
+    q: "Can my clients see the Origins Pillar branding?",
+    a: "No. Your client portal is fully white-labeled. Clients see your agency name, your brand colors, and your domain. Origins Pillar stays invisible.",
   },
   {
     q: "How does payment processing work?",
@@ -26,7 +26,7 @@ const faqs = [
   },
   {
     q: "What integrations do you support?",
-    a: "Originspillar integrates with Stripe for payments, Slack for notifications, and supports webhooks for custom integrations. Our API is available on Pro and Enterprise plans.",
+    a: "Origins Pillar integrates with Stripe for payments, Slack for notifications, and supports webhooks for custom integrations. Our API is available on Pro and Enterprise plans.",
   },
 ];
 

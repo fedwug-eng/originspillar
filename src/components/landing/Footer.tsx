@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 
 const footerLinks = {
   Product: [
@@ -24,10 +25,14 @@ const Footer = () => (
         {/* Brand */}
         <div className="col-span-2 md:col-span-1">
           <div className="flex items-center gap-2.5 mb-4">
-            <div className="w-7 h-7 rounded-lg bg-gradient-accent flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-xs">O</span>
-            </div>
-            <span className="font-bold text-foreground tracking-tight">Originspillar</span>
+            <Image
+              src="/logo.png"
+              alt="Origins Pillar"
+              width={28}
+              height={28}
+              className="rounded-lg object-contain"
+            />
+            <span className="font-bold text-foreground tracking-tight">Origins Pillar</span>
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
             The operating system for modern productized agencies.
@@ -65,7 +70,7 @@ const Footer = () => (
 
       <div className="mt-16 pt-8 border-t border-border">
         <p className="text-xs text-muted-foreground text-center">
-          © {new Date().getFullYear()} Originspillar. All rights reserved.
+          © {new Date().getFullYear()} Origins Pillar. All rights reserved.
         </p>
       </div>
     </div>

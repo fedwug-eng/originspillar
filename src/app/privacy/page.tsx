@@ -87,7 +87,7 @@ export default function PrivacyPage() {
                             <li>Object to processing of your data for marketing purposes</li>
                             <li>Restrict processing of your data under certain circumstances</li>
                         </ul>
-                        <p className="mt-2">To exercise any of these rights, contact us at: <a href="mailto:privacy@originspillar.com" className="text-primary hover:underline">privacy@originspillar.com</a></p>
+                        <p className="mt-2">To exercise any of these rights, contact us at: <a href="mailto:privacy@Origins Pillar.com" className="text-primary hover:underline">privacy@Origins Pillar.com</a></p>
                     </section>
 
                     <section>
@@ -119,8 +119,8 @@ export default function PrivacyPage() {
                     <section>
                         <h2 className="text-xl font-bold text-foreground mb-3">11. Contact Us</h2>
                         <p>For privacy-related inquiries:</p>
-                        <p className="mt-2">Email: <a href="mailto:privacy@originspillar.com" className="text-primary hover:underline">privacy@originspillar.com</a></p>
-                        <p>Address: Originspillar LLC, Dubai, United Arab Emirates</p>
+                        <p className="mt-2">Email: <a href="mailto:privacy@Origins Pillar.com" className="text-primary hover:underline">privacy@Origins Pillar.com</a></p>
+                        <p>Address: Origins Pillar LLC, Dubai, United Arab Emirates</p>
                     </section>
                 </div>
             </div>

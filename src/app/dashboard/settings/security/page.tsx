@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Key, Smartphone, Monitor, Clock } from "lucide-react";
 
 const GlassCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-    <div className={`bg-white/[0.04] backdrop-blur-md border border-white/[0.06] rounded-2xl ${className}`}>
+    <div className={`bg-card backdrop-blur-md border border-border rounded-2xl ${className}`}>
         {children}
     </div>
 );
@@ -34,11 +34,11 @@ export default function SecuritySettingsPage() {
     return (
         <div className="space-y-6 max-w-3xl">
             <div>
-                <Link href="/dashboard/settings" className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors duration-300 mb-4">
+                <Link href="/dashboard/settings" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground/70 hover:text-foreground/70 transition-colors duration-300 mb-4">
                     <ArrowLeft className="w-4 h-4" /> Back to Settings
                 </Link>
-                <h1 className="text-2xl font-bold text-white/90">Security</h1>
-                <p className="text-sm text-white/50 mt-1">Password, two-factor auth, and active sessions</p>
+                <h1 className="text-2xl font-bold text-foreground">Security</h1>
+                <p className="text-sm text-muted-foreground mt-1">Password, two-factor auth, and active sessions</p>
             </div>
 
             {/* Password */}
@@ -46,7 +46,7 @@ export default function SecuritySettingsPage() {
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <Key className="w-4 h-4 text-primary" />
-                        <h2 className="text-sm font-semibold text-white/70">Password</h2>
+                        <h2 className="text-sm font-semibold text-foreground/70">Password</h2>
                     </div>
                     <button
                         onClick={() => setShowPasswordForm(!showPasswordForm)}
@@ -62,21 +62,21 @@ export default function SecuritySettingsPage() {
                             placeholder="Current password"
                             value={currentPassword}
                             onChange={e => setCurrentPassword(e.target.value)}
-                            className="w-full bg-white/[0.04] border border-white/[0.06] rounded-xl px-4 py-2.5 text-sm text-white/80 placeholder:text-white/20 focus:outline-none focus:border-primary/30 focus:bg-white/[0.06] transition-all"
+                            className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-sm text-foreground/80 placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/30 focus:bg-accent transition-all"
                         />
                         <input
                             type="password"
                             placeholder="New password"
                             value={newPassword}
                             onChange={e => setNewPassword(e.target.value)}
-                            className="w-full bg-white/[0.04] border border-white/[0.06] rounded-xl px-4 py-2.5 text-sm text-white/80 placeholder:text-white/20 focus:outline-none focus:border-primary/30 focus:bg-white/[0.06] transition-all"
+                            className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-sm text-foreground/80 placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/30 focus:bg-accent transition-all"
                         />
                         <button className="bg-primary hover:bg-primary/90 text-white text-xs font-medium px-4 py-2 rounded-xl transition-all duration-300 shadow-lg shadow-primary/20">
                             Update Password
                         </button>
                     </div>
                 ) : (
-                    <p className="text-sm text-white/50">Last changed 45 days ago</p>
+                    <p className="text-sm text-muted-foreground">Last changed 45 days ago</p>
                 )}
             </GlassCard>
 
@@ -85,17 +85,17 @@ export default function SecuritySettingsPage() {
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <Smartphone className="w-4 h-4 text-primary" />
-                        <h2 className="text-sm font-semibold text-white/70">Two-Factor Authentication</h2>
+                        <h2 className="text-sm font-semibold text-foreground/70">Two-Factor Authentication</h2>
                     </div>
                     <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${twoFaEnabled ? "text-emerald-400 bg-emerald-400/10" : "text-amber-400 bg-amber-400/10"}`}>
                         {twoFaEnabled ? "Enabled" : "Disabled"}
                     </span>
                 </div>
-                <p className="text-sm text-white/50 mb-4">Add an extra layer of security by requiring a verification code on login.</p>
+                <p className="text-sm text-muted-foreground mb-4">Add an extra layer of security by requiring a verification code on login.</p>
                 <button
                     onClick={() => setTwoFaEnabled(!twoFaEnabled)}
                     className={`text-xs font-medium px-4 py-2 rounded-xl transition-all duration-300 shadow-lg ${twoFaEnabled
-                            ? "bg-white/[0.06] border border-white/[0.08] text-white/60 hover:bg-white/[0.1] shadow-none"
+                            ? "bg-accent border border-border text-white/60 hover:bg-accent shadow-none"
                             : "bg-primary hover:bg-primary/90 text-white shadow-primary/20"
                         }`}
                 >
@@ -108,7 +108,7 @@ export default function SecuritySettingsPage() {
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <Monitor className="w-4 h-4 text-primary" />
-                        <h2 className="text-sm font-semibold text-white/70">Active Sessions</h2>
+                        <h2 className="text-sm font-semibold text-foreground/70">Active Sessions</h2>
                     </div>
                     {sessions.filter(s => !s.current).length > 0 && (
                         <button onClick={revokeAll} className="text-xs text-red-400 hover:text-red-300 transition-colors">Revoke all</button>
@@ -116,16 +116,16 @@ export default function SecuritySettingsPage() {
                 </div>
                 <div className="space-y-3">
                     {sessions.map((s) => (
-                        <div key={s.id} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/[0.04]">
+                        <div key={s.id} className="flex items-center justify-between p-3 rounded-xl bg-accent/50 border border-border/60">
                             <div className="flex items-center gap-3">
-                                <Monitor className="w-4 h-4 text-white/40" />
+                                <Monitor className="w-4 h-4 text-muted-foreground/70" />
                                 <div>
-                                    <p className="text-sm text-white/70">{s.device}</p>
-                                    <p className="text-xs text-white/35">{s.location}</p>
+                                    <p className="text-sm text-foreground/70">{s.device}</p>
+                                    <p className="text-xs text-muted-foreground/60">{s.location}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
-                                <div className="flex items-center gap-1 text-xs text-white/40">
+                                <div className="flex items-center gap-1 text-xs text-muted-foreground/70">
                                     <Clock className="w-3 h-3" />
                                     {s.time}
                                 </div>

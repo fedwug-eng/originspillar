@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Check, Loader2 } from "lucide-react";
 
 const GlassCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-    <div className={`bg-white/[0.04] backdrop-blur-md border border-white/[0.06] rounded-2xl ${className}`}>
+    <div className={`bg-card backdrop-blur-md border border-border rounded-2xl ${className}`}>
         {children}
     </div>
 );
@@ -13,14 +13,14 @@ const GlassCard = ({ children, className = "" }: { children: React.ReactNode; cl
 function ToggleRow({ label, description, initial = true }: { label: string; description: string; initial?: boolean }) {
     const [on, setOn] = useState(initial);
     return (
-        <div className="flex items-center justify-between py-3 border-b border-white/[0.04] last:border-0">
+        <div className="flex items-center justify-between py-3 border-b border-border/60 last:border-0">
             <div>
-                <p className="text-sm text-white/75">{label}</p>
-                <p className="text-xs text-white/40">{description}</p>
+                <p className="text-sm text-foreground/75">{label}</p>
+                <p className="text-xs text-muted-foreground/70">{description}</p>
             </div>
             <button
                 onClick={() => setOn(!on)}
-                className={`w-10 h-6 rounded-full transition-colors duration-300 relative ${on ? "bg-primary" : "bg-white/[0.1]"}`}
+                className={`w-10 h-6 rounded-full transition-colors duration-300 relative ${on ? "bg-primary" : "bg-accent"}`}
             >
                 <div className={`w-4 h-4 rounded-full bg-white absolute top-1 transition-all duration-300 ${on ? "left-5" : "left-1"}`} />
             </button>
@@ -45,15 +45,15 @@ export default function NotificationsSettingsPage() {
     return (
         <div className="space-y-6 max-w-3xl">
             <div>
-                <Link href="/dashboard/settings" className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors duration-300 mb-4">
+                <Link href="/dashboard/settings" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground/70 hover:text-foreground/70 transition-colors duration-300 mb-4">
                     <ArrowLeft className="w-4 h-4" /> Back to Settings
                 </Link>
-                <h1 className="text-2xl font-bold text-white/90">Notifications</h1>
-                <p className="text-sm text-white/50 mt-1">Choose how and when you get notified</p>
+                <h1 className="text-2xl font-bold text-foreground">Notifications</h1>
+                <p className="text-sm text-muted-foreground mt-1">Choose how and when you get notified</p>
             </div>
 
             <GlassCard className="p-6">
-                <h2 className="text-sm font-semibold text-white/70 mb-2">Email Notifications</h2>
+                <h2 className="text-sm font-semibold text-foreground/70 mb-2">Email Notifications</h2>
                 <div>
                     <ToggleRow label="New project assigned" description="When a new project is added to your account" />
                     <ToggleRow label="Client messages" description="When a client sends you a message" />
@@ -64,7 +64,7 @@ export default function NotificationsSettingsPage() {
             </GlassCard>
 
             <GlassCard className="p-6">
-                <h2 className="text-sm font-semibold text-white/70 mb-2">In-App Notifications</h2>
+                <h2 className="text-sm font-semibold text-foreground/70 mb-2">In-App Notifications</h2>
                 <div>
                     <ToggleRow label="Desktop push notifications" description="Browser notifications for important updates" initial={false} />
                     <ToggleRow label="Sound alerts" description="Play a sound for new notifications" initial={false} />

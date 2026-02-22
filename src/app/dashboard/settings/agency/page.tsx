@@ -17,7 +17,7 @@ type AgencyData = {
 };
 
 const GlassCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-    <div className={`bg-white/[0.04] backdrop-blur-md border border-white/[0.06] rounded-2xl ${className}`}>
+    <div className={`bg-card backdrop-blur-md border border-border rounded-2xl ${className}`}>
         {children}
     </div>
 );
@@ -80,7 +80,7 @@ export default function AgencySettingsPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-6 h-6 text-white/30 animate-spin" />
+                <Loader2 className="w-6 h-6 text-muted-foreground/50 animate-spin" />
             </div>
         );
     }
@@ -95,16 +95,16 @@ export default function AgencySettingsPage() {
     return (
         <div className="space-y-6 max-w-3xl">
             <div>
-                <Link href="/dashboard/settings" className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors duration-300 mb-4">
+                <Link href="/dashboard/settings" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground/70 hover:text-foreground/70 transition-colors duration-300 mb-4">
                     <ArrowLeft className="w-4 h-4" /> Back to Settings
                 </Link>
-                <h1 className="text-2xl font-bold text-white/90">Agency</h1>
-                <p className="text-sm text-white/50 mt-1">Company name, logo, and branding</p>
+                <h1 className="text-2xl font-bold text-foreground">Agency</h1>
+                <p className="text-sm text-muted-foreground mt-1">Company name, logo, and branding</p>
             </div>
 
             {/* Logo */}
             <GlassCard className="p-6">
-                <h2 className="text-sm font-semibold text-white/70 mb-4">Agency Logo</h2>
+                <h2 className="text-sm font-semibold text-foreground/70 mb-4">Agency Logo</h2>
                 <div className="flex items-center gap-5">
                     <div className="relative">
                         <div className="w-20 h-20 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/15">
@@ -115,47 +115,47 @@ export default function AgencySettingsPage() {
                         </button>
                     </div>
                     <div>
-                        <p className="text-sm text-white/70 font-medium">{name || "Originspillar"}</p>
-                        <p className="text-xs text-white/40 mt-0.5">SVG, PNG or JPG. Recommended 200x200px.</p>
+                        <p className="text-sm text-foreground/70 font-medium">{name || "Origins Pillar"}</p>
+                        <p className="text-xs text-muted-foreground/70 mt-0.5">SVG, PNG or JPG. Recommended 200x200px.</p>
                     </div>
                 </div>
             </GlassCard>
 
             {/* Company Info */}
             <GlassCard className="p-6">
-                <h2 className="text-sm font-semibold text-white/70 mb-4">Company Information</h2>
+                <h2 className="text-sm font-semibold text-foreground/70 mb-4">Company Information</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-white/50">Company Name</label>
-                        <input value={name} onChange={e => setName(e.target.value)} className="w-full bg-white/[0.04] border border-white/[0.06] rounded-xl px-4 py-2.5 text-sm text-white/80 placeholder:text-white/20 focus:outline-none focus:border-primary/30 focus:bg-white/[0.06] transition-all" />
+                        <label className="text-xs font-medium text-muted-foreground">Company Name</label>
+                        <input value={name} onChange={e => setName(e.target.value)} className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-sm text-foreground/80 placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/30 focus:bg-accent transition-all" />
                     </div>
                     <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-white/50">Website</label>
-                        <input value={website} onChange={e => setWebsite(e.target.value)} className="w-full bg-white/[0.04] border border-white/[0.06] rounded-xl px-4 py-2.5 text-sm text-white/80 placeholder:text-white/20 focus:outline-none focus:border-primary/30 focus:bg-white/[0.06] transition-all" />
+                        <label className="text-xs font-medium text-muted-foreground">Website</label>
+                        <input value={website} onChange={e => setWebsite(e.target.value)} className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-sm text-foreground/80 placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/30 focus:bg-accent transition-all" />
                     </div>
                     <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-white/50">Industry</label>
-                        <input value={industry} onChange={e => setIndustry(e.target.value)} className="w-full bg-white/[0.04] border border-white/[0.06] rounded-xl px-4 py-2.5 text-sm text-white/80 placeholder:text-white/20 focus:outline-none focus:border-primary/30 focus:bg-white/[0.06] transition-all" />
+                        <label className="text-xs font-medium text-muted-foreground">Industry</label>
+                        <input value={industry} onChange={e => setIndustry(e.target.value)} className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-sm text-foreground/80 placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/30 focus:bg-accent transition-all" />
                     </div>
                     <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-white/50">Company Size</label>
-                        <input value={companySize} onChange={e => setCompanySize(e.target.value)} className="w-full bg-white/[0.04] border border-white/[0.06] rounded-xl px-4 py-2.5 text-sm text-white/80 placeholder:text-white/20 focus:outline-none focus:border-primary/30 focus:bg-white/[0.06] transition-all" />
+                        <label className="text-xs font-medium text-muted-foreground">Company Size</label>
+                        <input value={companySize} onChange={e => setCompanySize(e.target.value)} className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-sm text-foreground/80 placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/30 focus:bg-accent transition-all" />
                     </div>
                     <div className="sm:col-span-2 space-y-1.5">
-                        <label className="text-xs font-medium text-white/50">Address</label>
-                        <input value={address} onChange={e => setAddress(e.target.value)} className="w-full bg-white/[0.04] border border-white/[0.06] rounded-xl px-4 py-2.5 text-sm text-white/80 placeholder:text-white/20 focus:outline-none focus:border-primary/30 focus:bg-white/[0.06] transition-all" />
+                        <label className="text-xs font-medium text-muted-foreground">Address</label>
+                        <input value={address} onChange={e => setAddress(e.target.value)} className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-sm text-foreground/80 placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/30 focus:bg-accent transition-all" />
                     </div>
                 </div>
             </GlassCard>
 
             {/* Branding */}
             <GlassCard className="p-6">
-                <h2 className="text-sm font-semibold text-white/70 mb-4">Brand Colors</h2>
+                <h2 className="text-sm font-semibold text-foreground/70 mb-4">Brand Colors</h2>
                 <div className="flex items-center gap-4">
                     {brandColors.map((item, i) => (
                         <div key={i} className="text-center relative">
                             <div
-                                className="w-12 h-12 rounded-xl border border-white/[0.1] cursor-pointer hover:scale-105 transition-transform"
+                                className="w-12 h-12 rounded-xl border border-border cursor-pointer hover:scale-105 transition-transform"
                                 style={{ backgroundColor: item.color }}
                                 onClick={() => {
                                     if (item.setter) {
@@ -167,7 +167,7 @@ export default function AgencySettingsPage() {
                                     }
                                 }}
                             />
-                            <p className="text-[10px] text-white/30 mt-1.5">{item.label}</p>
+                            <p className="text-[10px] text-muted-foreground/50 mt-1.5">{item.label}</p>
                         </div>
                     ))}
                 </div>

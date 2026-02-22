@@ -18,12 +18,12 @@ export default function TermsPage() {
                 <div className="prose prose-gray max-w-none space-y-8 text-muted-foreground leading-relaxed text-sm">
                     <section>
                         <h2 className="text-xl font-bold text-foreground mb-3">1. Agreement to Terms</h2>
-                        <p>By accessing or using Originspillar (&ldquo;the Service&rdquo;), you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you do not have permission to access the Service.</p>
+                        <p>By accessing or using Origins Pillar (&ldquo;the Service&rdquo;), you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you do not have permission to access the Service.</p>
                     </section>
 
                     <section>
                         <h2 className="text-xl font-bold text-foreground mb-3">2. Description of Service</h2>
-                        <p>Originspillar is a cloud-based agency management platform that provides tools for client management, project tracking, payment processing, and client portal services. The Service is provided on a subscription basis.</p>
+                        <p>Origins Pillar is a cloud-based agency management platform that provides tools for client management, project tracking, payment processing, and client portal services. The Service is provided on a subscription basis.</p>
                     </section>
 
                     <section>
@@ -84,7 +84,7 @@ export default function TermsPage() {
                     <section>
                         <h2 className="text-xl font-bold text-foreground mb-3">8. Intellectual Property</h2>
                         <ul className="list-disc pl-5 space-y-2">
-                            <li>The Service, including its original content, features, and functionality, is owned by Originspillar and protected by international copyright and trademark laws</li>
+                            <li>The Service, including its original content, features, and functionality, is owned by Origins Pillar and protected by international copyright and trademark laws</li>
                             <li>Your content remains yours; by uploading content, you grant us a limited license to process and display it within the Service</li>
                         </ul>
                     </section>
@@ -96,7 +96,7 @@ export default function TermsPage() {
 
                     <section>
                         <h2 className="text-xl font-bold text-foreground mb-3">10. Limitation of Liability</h2>
-                        <p>To the maximum extent permitted by law, Originspillar shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or business opportunity.</p>
+                        <p>To the maximum extent permitted by law, Origins Pillar shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or business opportunity.</p>
                     </section>
 
                     <section>
@@ -120,7 +120,7 @@ export default function TermsPage() {
 
                     <section>
                         <h2 className="text-xl font-bold text-foreground mb-3">14. Contact</h2>
-                        <p>For questions about these Terms, contact us at: <a href="mailto:legal@originspillar.com" className="text-primary hover:underline">legal@originspillar.com</a></p>
+                        <p>For questions about these Terms, contact us at: <a href="mailto:legal@Origins Pillar.com" className="text-primary hover:underline">legal@Origins Pillar.com</a></p>
                     </section>
                 </div>
             </div>

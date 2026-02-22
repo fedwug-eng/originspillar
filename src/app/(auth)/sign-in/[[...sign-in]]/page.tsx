@@ -1,21 +1,27 @@
 import { SignIn } from "@clerk/nextjs";
+import Image from "next/image";
 
 export default function Page() {
     return (
-        <div className="flex min-h-screen items-center justify-center bg-zinc-950 p-4 relative overflow-hidden selection:bg-violet-500/30">
-            {/* Subtle Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[500px] opacity-20 pointer-events-none z-0">
-                <div className="absolute inset-0 bg-violet-600 blur-[120px] rounded-full mix-blend-screen" />
-                <div className="absolute inset-0 bg-blue-600 blur-[120px] rounded-full mix-blend-screen translate-x-1/4" />
+        <div className="flex min-h-screen items-center justify-center bg-background p-4 relative overflow-hidden selection:bg-primary/30">
+            {/* Background Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[500px] opacity-15 pointer-events-none z-0">
+                <div className="absolute inset-0 bg-primary blur-[120px] rounded-full mix-blend-screen" />
+                <div className="absolute inset-0 bg-blue-400 blur-[120px] rounded-full mix-blend-screen translate-x-1/4" />
             </div>
 
             <div className="relative z-10 w-full max-w-md">
                 <div className="flex justify-center mb-8">
                     <div className="flex flex-col items-center space-y-2">
-                        <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.5)]">
-                            <div className="h-3 w-3 rounded-full bg-white" />
-                        </div>
-                        <span className="text-2xl font-bold tracking-tight text-white">Originspillar</span>
+                        <Image
+                            src="/logo.png"
+                            alt="Origins Pillar"
+                            width={48}
+                            height={48}
+                            className="rounded-xl object-contain"
+                            priority
+                        />
+                        <span className="text-2xl font-bold tracking-tight text-foreground">Origins Pillar</span>
                     </div>
                 </div>
 
@@ -23,28 +29,25 @@ export default function Page() {
                     appearance={{
                         elements: {
                             rootBox: "mx-auto w-full",
-                            card: "bg-zinc-900/50 border border-white/5 backdrop-blur-xl shadow-2xl w-full",
-                            headerTitle: "text-white",
-                            headerSubtitle: "text-zinc-400",
-                            socialButtonsBlockButton: "border-white/10 bg-zinc-950 text-white hover:bg-white/5",
-                            socialButtonsBlockButtonText: "text-white font-medium",
-                            dividerLine: "bg-white/10",
-                            dividerText: "text-zinc-500",
-                            formFieldLabel: "text-zinc-300",
-                            formFieldInput: "bg-zinc-950 border-white/10 text-white placeholder-zinc-500 focus:ring-violet-500 focus:border-violet-500",
-                            formButtonPrimary: "bg-violet-600 hover:bg-violet-500 text-white shadow-[0_0_15px_-3px_rgba(139,92,246,0.5)]",
-                            footerActionText: "text-zinc-400",
-                            footerActionLink: "text-violet-400 hover:text-violet-300",
-                            identityPreviewText: "text-white",
-                            identityPreviewEditButton: "text-violet-400 hover:text-violet-300",
+                            card: "bg-card/80 border border-border backdrop-blur-xl shadow-2xl w-full",
+                            headerTitle: "text-foreground",
+                            headerSubtitle: "text-muted-foreground",
+                            socialButtonsBlockButton: "border-border bg-background text-foreground hover:bg-accent",
+                            socialButtonsBlockButtonText: "text-foreground font-medium",
+                            dividerLine: "bg-border",
+                            dividerText: "text-muted-foreground",
+                            formFieldLabel: "text-foreground/80",
+                            formFieldInput: "bg-background border-border text-foreground placeholder-muted-foreground focus:ring-primary focus:border-primary",
+                            formButtonPrimary: "bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20",
+                            footerActionText: "text-muted-foreground",
+                            footerActionLink: "text-primary hover:text-primary/80",
+                            identityPreviewText: "text-foreground",
+                            identityPreviewEditButton: "text-primary hover:text-primary/80",
                         },
                         variables: {
                             colorBackground: "transparent",
-                            colorText: "white",
-                            colorPrimary: "#8b5cf6",
-                            colorTextSecondary: "#a1a1aa",
-                            colorInputBackground: "#09090b",
-                            colorInputText: "white",
+                            colorPrimary: "#2563eb",
+                            colorTextSecondary: "#64748b",
                         }
                     }}
                 />
