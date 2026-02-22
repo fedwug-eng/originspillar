@@ -6,7 +6,7 @@ import {
     BarChart3, FolderKanban, Users, DollarSign, Settings, Search,
     Package, MessageSquare, Bell, ChevronRight, TrendingUp, CheckCircle2,
     Clock, Star, Key, Plus, User, Palette, Shield, CreditCard,
-    BellRing, Building2, LogOut
+    BellRing, Building2, LogOut, Calendar, Upload, File, FileText, Image as ImageIcon, Paperclip, AlertCircle
 } from "lucide-react";
 
 /* ════════════════════════════════════════════════════════════════════
@@ -204,93 +204,252 @@ function RequestsView() {
         const isEcommerce = req.title === "E-commerce Redesign";
 
         return (
-            <div className="space-y-3 relative animate-in fade-in slide-in-from-right-4 duration-300">
+            <div className="space-y-4 relative animate-in fade-in slide-in-from-right-4 duration-300 pb-10 max-w-[800px] mx-auto">
                 <button
                     onClick={() => setViewingReq(null)}
-                    className="flex items-center gap-1 text-[9px] text-muted-foreground hover:text-foreground transition-colors mb-2 cursor-pointer"
+                    className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                 >
-                    <ChevronRight className="w-3 h-3 rotate-180" /> Back to Requests
+                    <ChevronRight className="w-3 h-3 rotate-180" /> Back to Projects
                 </button>
-                <div className="flex items-start justify-between">
+
+                {/* Header Profile */}
+                <div className="flex gap-3 items-start">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20">
+                        <FolderKanban className="w-4 h-4 text-primary" />
+                    </div>
                     <div>
                         <div className="flex items-center gap-2 mb-1">
-                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                                <FolderKanban className="w-4 h-4 text-primary" />
-                            </div>
-                            <div>
-                                <h3 className="text-sm font-bold text-foreground">{req.title}</h3>
-                                <p className="text-[10px] text-muted-foreground">{req.client}</p>
-                            </div>
+                            <h2 className="text-[16px] font-bold text-foreground tracking-tight">{req.title}</h2>
+                            <span className={`text-[8px] font-bold px-2 py-0.5 rounded-full border ${req.color} border-current/20`}>{req.status}</span>
                         </div>
-                    </div>
-                    <span className={`text-[8px] font-medium px-2 py-1 rounded ${req.color}`}>{req.status}</span>
-                </div>
-
-                <div className="grid grid-cols-3 gap-2 mt-4">
-                    <div className="bg-muted/30 rounded-xl p-3 border border-border/50">
-                        <p className="text-[8px] text-muted-foreground mb-1">Due Date</p>
-                        <p className="text-[10px] font-semibold flex items-center gap-1"><Clock className="w-3 h-3" /> {req.due}</p>
-                    </div>
-                    <div className="bg-muted/30 rounded-xl p-3 border border-border/50">
-                        <p className="text-[8px] text-muted-foreground mb-1">Budget</p>
-                        <p className="text-[10px] font-semibold flex items-center gap-1"><DollarSign className="w-3 h-3" /> {req.amount}</p>
-                    </div>
-                    <div className="bg-muted/30 rounded-xl p-3 border border-border/50">
-                        <p className="text-[8px] text-muted-foreground mb-1">Progress</p>
-                        <div className="flex items-center justify-between mb-1">
-                            <span className="text-[10px] font-semibold">{req.progress}%</span>
-                        </div>
-                        <div className="h-1 bg-muted rounded-full overflow-hidden">
-                            <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${req.progress}%` }} />
-                        </div>
+                        <p className="text-[10px] text-muted-foreground mb-1">{req.client}</p>
+                        <p className="text-[10px] text-muted-foreground/80 leading-relaxed max-w-xl">
+                            {isEcommerce ? "Complete redesign of the e-commerce platform including product pages, checkout flow, and mobile optimization." : "Detailed project brief and client requirements go here."}
+                        </p>
                     </div>
                 </div>
 
-                {/* Mock Details Content */}
-                <div className="mt-4 border border-border rounded-xl bg-card overflow-hidden">
-                    <div className="border-b border-border px-4 py-2 bg-muted/20 flex gap-4">
-                        <span className="text-[9px] font-medium text-primary border-b-2 border-primary pb-1 cursor-pointer">Overview</span>
-                        <span className="text-[9px] font-medium text-muted-foreground pb-1 hover:text-foreground cursor-pointer transition-colors">Tasks</span>
-                        <span className="text-[9px] font-medium text-muted-foreground pb-1 hover:text-foreground cursor-pointer transition-colors">Files</span>
+                {/* 4 Stats Cards */}
+                <div className="grid grid-cols-4 gap-2 pt-2">
+                    <div className="bg-card border border-border/60 rounded-xl p-3 hover:border-border transition-colors cursor-pointer shadow-sm">
+                        <p className="text-[9px] text-muted-foreground mb-1 flex items-center gap-1.5"><TrendingUp className="w-3 h-3 text-primary" /> Progress</p>
+                        <p className="text-sm font-bold text-foreground">{req.progress}%</p>
                     </div>
-                    <div className="p-4">
-                        {isEcommerce ? (
-                            <div className="space-y-4">
-                                <div>
-                                    <h4 className="text-[10px] font-bold text-foreground mb-1">Project Brief</h4>
-                                    <p className="text-[9px] text-muted-foreground leading-relaxed">
-                                        Complete redesign of the Vertex Labs e-commerce platform. Goals include improving conversion rates, enhancing mobile usability, and modernizing the overall aesthetic to match recent brand guidelines.
-                                    </p>
+                    <div className="bg-card border border-border/60 rounded-xl p-3 hover:border-border transition-colors cursor-pointer shadow-sm">
+                        <p className="text-[9px] text-muted-foreground mb-1 flex items-center gap-1.5"><Calendar className="w-3 h-3 text-amber-400" /> Due Date</p>
+                        <p className="text-sm font-bold text-foreground">{req.due}, 2026</p>
+                    </div>
+                    <div className="bg-card border border-border/60 rounded-xl p-3 hover:border-border transition-colors cursor-pointer shadow-sm">
+                        <p className="text-[9px] text-muted-foreground mb-1 flex items-center gap-1.5"><DollarSign className="w-3 h-3 text-emerald-400" /> Budget</p>
+                        <p className="text-sm font-bold text-foreground">{req.amount}</p>
+                    </div>
+                    <div className="bg-card border border-border/60 rounded-xl p-3 hover:border-border transition-colors cursor-pointer shadow-sm">
+                        <p className="text-[9px] text-muted-foreground mb-1 flex items-center gap-1.5"><DollarSign className="w-3 h-3 text-muted-foreground" /> Spent</p>
+                        <p className="text-sm font-bold text-foreground">{isEcommerce ? "$8,160" : "$0"}</p>
+                    </div>
+                </div>
+
+                {/* Overall Progress */}
+                <div className="bg-card border border-border/60 rounded-xl p-3 shadow-sm">
+                    <div className="flex items-center justify-between mb-2">
+                        <p className="text-[10px] font-bold text-foreground">Overall Progress</p>
+                        <p className="text-[10px] font-bold text-foreground">{req.progress}%</p>
+                    </div>
+                    <div className="h-1.5 bg-muted rounded-full overflow-hidden mb-2">
+                        <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${req.progress}%` }} />
+                    </div>
+                    <div className="flex items-center justify-between text-[8px] text-muted-foreground">
+                        <span>Started Jan 15</span>
+                        <span>Due {req.due}, 2026</span>
+                    </div>
+                </div>
+
+                {/* Requests (Kanban) */}
+                <div className="mt-6 mb-2 pt-2">
+                    <h3 className="text-[13px] font-bold text-foreground mb-0.5">Requests</h3>
+                    <p className="text-[9px] text-muted-foreground">Manage and track client tasks across your pipeline.</p>
+                </div>
+
+                {isEcommerce ? (
+                    <div className="grid grid-cols-4 gap-3 overflow-x-auto pb-2">
+                        {/* Backlog */}
+                        <div className="space-y-2 min-w-[160px]">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[8px] font-bold text-foreground/80 tracking-wider">BACKLOG</span>
+                                    <span className="text-[8px] text-muted-foreground">3</span>
                                 </div>
-                                <div>
-                                    <h4 className="text-[10px] font-bold text-foreground mb-2">Recent Updates</h4>
-                                    <div className="space-y-2">
-                                        <div className="flex gap-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
-                                            <div>
-                                                <p className="text-[9px] font-medium text-foreground">Initial wireframes approved</p>
-                                                <p className="text-[8px] text-muted-foreground">Client signed off on homepage and product page layouts.</p>
-                                            </div>
+                                <button className="w-4 h-4 rounded hover:bg-accent flex items-center justify-center text-muted-foreground transition-colors"><Plus className="w-2.5 h-2.5" /></button>
+                            </div>
+                            <div className="bg-card border border-border/50 rounded-lg p-2.5 hover:border-primary/30 transition-colors shadow-sm cursor-pointer group">
+                                <p className="text-[9px] font-semibold text-foreground mb-2.5 group-hover:text-primary transition-colors">Micro-interactions & animations</p>
+                                <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center"><span className="text-[6px] font-bold text-primary">JD</span></div>
+                            </div>
+                            <div className="bg-card border border-border/50 rounded-lg p-2.5 hover:border-primary/30 transition-colors shadow-sm cursor-pointer group">
+                                <p className="text-[9px] font-semibold text-foreground mb-2.5 group-hover:text-primary transition-colors">Developer handoff docs</p>
+                                <div className="w-4 h-4 rounded-full bg-indigo-500/20 flex items-center justify-center"><span className="text-[6px] font-bold text-indigo-400">AS</span></div>
+                            </div>
+                            <div className="bg-card border border-border/50 rounded-lg p-2.5 hover:border-primary/30 transition-colors shadow-sm cursor-pointer group">
+                                <p className="text-[9px] font-semibold text-foreground mb-2.5 group-hover:text-primary transition-colors">Final client presentation</p>
+                                <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center"><span className="text-[6px] font-bold text-primary">JD</span></div>
+                            </div>
+                        </div>
+
+                        {/* In Progress */}
+                        <div className="space-y-2 min-w-[160px]">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[8px] font-bold text-foreground/80 tracking-wider">IN PROGRESS</span>
+                                    <span className="text-[8px] text-muted-foreground">2</span>
+                                </div>
+                                <button className="w-4 h-4 rounded hover:bg-accent flex items-center justify-center text-muted-foreground transition-colors"><Plus className="w-2.5 h-2.5" /></button>
+                            </div>
+                            <div className="bg-card border border-border/50 rounded-lg p-2.5 hover:border-primary/30 transition-colors shadow-sm cursor-pointer group">
+                                <p className="text-[9px] font-semibold text-foreground mb-2.5 group-hover:text-primary transition-colors">Mobile responsive layouts</p>
+                                <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center"><span className="text-[6px] font-bold text-primary">JD</span></div>
+                            </div>
+                            <div className="bg-card border border-border/50 rounded-lg p-2.5 hover:border-primary/30 transition-colors shadow-sm cursor-pointer group">
+                                <p className="text-[9px] font-semibold text-foreground mb-2.5 group-hover:text-primary transition-colors">Design system components</p>
+                                <div className="w-4 h-4 rounded-full bg-indigo-500/20 flex items-center justify-center"><span className="text-[6px] font-bold text-indigo-400">AS</span></div>
+                            </div>
+                        </div>
+
+                        {/* In Review */}
+                        <div className="space-y-2 min-w-[160px]">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[8px] font-bold text-foreground/80 tracking-wider">IN REVIEW</span>
+                                    <span className="text-[8px] text-muted-foreground">1</span>
+                                </div>
+                                <button className="w-4 h-4 rounded hover:bg-accent flex items-center justify-center text-muted-foreground transition-colors"><Plus className="w-2.5 h-2.5" /></button>
+                            </div>
+                            <div className="bg-card border border-border/50 rounded-lg p-2.5 hover:border-primary/30 transition-colors shadow-sm cursor-pointer group">
+                                <p className="text-[9px] font-semibold text-foreground mb-2.5 group-hover:text-primary transition-colors">Cart & checkout flow</p>
+                                <div className="w-4 h-4 rounded-full bg-indigo-500/20 flex items-center justify-center"><span className="text-[6px] font-bold text-indigo-400">AS</span></div>
+                            </div>
+                        </div>
+
+                        {/* Completed */}
+                        <div className="space-y-2 min-w-[160px]">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[8px] font-bold text-emerald-400/80 tracking-wider">COMPLETED</span>
+                                    <span className="text-[8px] text-muted-foreground">2</span>
+                                </div>
+                                <button className="w-4 h-4 rounded hover:bg-accent flex items-center justify-center text-muted-foreground transition-colors"><Plus className="w-2.5 h-2.5" /></button>
+                            </div>
+                            <div className="bg-card border border-border/50 rounded-lg p-2.5 hover:border-primary/30 transition-colors shadow-sm cursor-pointer group">
+                                <p className="text-[9px] font-semibold text-foreground mb-2.5 group-hover:text-primary transition-colors">Homepage wireframes</p>
+                                <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center"><span className="text-[6px] font-bold text-primary">JD</span></div>
+                            </div>
+                            <div className="bg-card border border-border/50 rounded-lg p-2.5 hover:border-primary/30 transition-colors shadow-sm cursor-pointer group">
+                                <p className="text-[9px] font-semibold text-foreground mb-2.5 group-hover:text-primary transition-colors">Product page design</p>
+                                <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center"><span className="text-[6px] font-bold text-primary">JD</span></div>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="py-6 flex flex-col items-center justify-center text-center bg-card border border-border/50 rounded-xl">
+                        <FolderKanban className="w-6 h-6 text-muted-foreground/30 mb-2" />
+                        <h4 className="text-[10px] font-medium text-foreground/80 mb-1">No tasks yet</h4>
+                        <p className="text-[8px] text-muted-foreground">This project doesn't have any board tasks.</p>
+                    </div>
+                )}
+
+                {/* Lower Section: Files & Deliverables + Activity */}
+                {isEcommerce && (
+                    <div className="grid grid-cols-2 gap-3 mt-4">
+                        {/* Files & Deliverables */}
+                        <div className="bg-card border border-border/50 rounded-xl p-3 shadow-sm">
+                            <div className="flex items-center justify-between mb-3">
+                                <h3 className="text-[11px] font-bold text-foreground">Files & Deliverables</h3>
+                                <button className="text-[8px] flex items-center gap-1 text-primary hover:text-primary/80 transition-colors"><Upload className="w-2.5 h-2.5" /> Upload</button>
+                            </div>
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-2 group hover:bg-accent/40 p-1.5 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-border/50">
+                                    <div className="w-7 h-7 rounded-lg bg-indigo-500/10 flex items-center justify-center shrink-0 border border-indigo-500/20 group-hover:bg-indigo-500/20 transition-colors"><File className="w-3.5 h-3.5 text-indigo-400" /></div>
+                                    <div><p className="text-[9px] font-bold text-foreground group-hover:text-primary transition-colors">Homepage_v3.fig</p><p className="text-[7px] text-muted-foreground">24 MB · Feb 18</p></div>
+                                </div>
+                                <div className="flex items-center gap-2 group hover:bg-accent/40 p-1.5 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-border/50">
+                                    <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0 border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors"><ImageIcon className="w-3.5 h-3.5 text-emerald-400" /></div>
+                                    <div><p className="text-[9px] font-bold text-foreground group-hover:text-primary transition-colors">Product_Mockups.png</p><p className="text-[7px] text-muted-foreground">8.2 MB · Feb 15</p></div>
+                                </div>
+                                <div className="flex items-center gap-2 group hover:bg-accent/40 p-1.5 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-border/50">
+                                    <div className="w-7 h-7 rounded-lg bg-rose-500/10 flex items-center justify-center shrink-0 border border-rose-500/20 group-hover:bg-rose-500/20 transition-colors"><FileText className="w-3.5 h-3.5 text-rose-400" /></div>
+                                    <div><p className="text-[9px] font-bold text-foreground group-hover:text-primary transition-colors">Checkout_Flow.pdf</p><p className="text-[7px] text-muted-foreground">3.1 MB · Feb 12</p></div>
+                                </div>
+                                <div className="flex items-center gap-2 group hover:bg-accent/40 p-1.5 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-border/50">
+                                    <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0 border border-amber-500/20 group-hover:bg-amber-500/20 transition-colors"><Paperclip className="w-3.5 h-3.5 text-amber-400" /></div>
+                                    <div><p className="text-[9px] font-bold text-foreground group-hover:text-primary transition-colors">Brand_Assets.zip</p><p className="text-[7px] text-muted-foreground">45 MB · Feb 10</p></div>
+                                </div>
+                                <div className="flex items-center gap-2 group hover:bg-accent/40 p-1.5 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-border/50">
+                                    <div className="w-7 h-7 rounded-lg bg-indigo-500/10 flex items-center justify-center shrink-0 border border-indigo-500/20 group-hover:bg-indigo-500/20 transition-colors"><File className="w-3.5 h-3.5 text-indigo-400" /></div>
+                                    <div><p className="text-[9px] font-bold text-foreground group-hover:text-primary transition-colors">Mobile_Screens.fig</p><p className="text-[7px] text-muted-foreground">18 MB · Feb 8</p></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Activity */}
+                        <div className="bg-card border border-border/50 rounded-xl p-3 shadow-sm">
+                            <div className="flex items-center justify-between mb-3">
+                                <h3 className="text-[11px] font-bold text-foreground">Activity</h3>
+                                <button className="text-[8px] text-primary hover:text-primary/80 transition-colors">View all</button>
+                            </div>
+                            <div className="space-y-3 relative before:absolute before:inset-0 before:ml-2.5 before:-translate-x-px before:h-full before:w-[1px] before:bg-border/50">
+                                {[
+                                    { i: Upload, color: 'text-primary', iconBg: 'bg-primary/10 border-primary/20', t: 'Uploaded revised homepage mockups', st: 'Jane Doe · 2h ago' },
+                                    { i: CheckCircle2, color: 'text-emerald-400', iconBg: 'bg-emerald-400/10 border-emerald-400/20', t: 'Approved checkout flow designs', st: 'Client (Vertex Labs) · 5h ago' },
+                                    { i: MessageSquare, color: 'text-blue-400', iconBg: 'bg-blue-400/10 border-blue-400/20', t: 'Added comments on product page', st: 'Alex Smith · 1d ago' },
+                                    { i: CheckCircle2, color: 'text-emerald-400', iconBg: 'bg-emerald-400/10 border-emerald-400/20', t: 'Completed cart & checkout flow', st: 'Alex Smith · 2d ago' },
+                                    { i: AlertCircle, color: 'text-amber-400', iconBg: 'bg-amber-400/10 border-amber-400/20', t: 'Milestone: Mobile designs started', st: 'Jane Doe · 3d ago' },
+                                    { i: DollarSign, color: 'text-muted-foreground', iconBg: 'bg-muted border-border', t: 'Invoice INV-087 sent', st: 'System · 5d ago' },
+                                ].map((act, idx) => (
+                                    <div key={idx} className="relative flex items-center group cursor-pointer pl-6">
+                                        <div className="absolute left-0 w-5 h-5 rounded-full border bg-card flex items-center justify-center z-10 transition-transform group-hover:scale-110">
+                                            <div className={`w-4 h-4 rounded-full flex items-center justify-center border ${act.iconBg}`}><act.i className={`w-2.5 h-2.5 ${act.color}`} /></div>
                                         </div>
-                                        <div className="flex gap-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0 animate-pulse" />
-                                            <div>
-                                                <p className="text-[9px] font-medium text-foreground">UI Design in progress</p>
-                                                <p className="text-[8px] text-muted-foreground">Working on high-fidelity mockups for cart and checkout flows.</p>
-                                            </div>
+                                        <div className="py-0.5 px-2 -ml-2 rounded border border-transparent group-hover:bg-accent/30 group-hover:border-border/50 transition-colors">
+                                            <p className="text-[9px] font-bold text-foreground group-hover:text-primary transition-colors">{act.t}</p>
+                                            <p className="text-[7px] text-muted-foreground">{act.st}</p>
                                         </div>
                                     </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Linked Invoices */}
+                {isEcommerce && (
+                    <div className="bg-card border border-border/50 rounded-xl p-3 mt-3 shadow-sm">
+                        <div className="flex items-center justify-between mb-3">
+                            <h3 className="text-[11px] font-bold text-foreground">Linked Invoices</h3>
+                            <span className="text-[8px] text-muted-foreground">3 invoices</span>
+                        </div>
+                        <div className="space-y-1">
+                            <div className="flex items-center justify-between p-2 hover:bg-accent/40 rounded-lg cursor-pointer transition-colors group">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-6 h-6 rounded-full border border-border/50 flex items-center justify-center shrink-0 group-hover:bg-primary/10 group-hover:border-primary/30 transition-colors"><DollarSign className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors" /></div>
+                                    <div><p className="text-[9px] font-bold text-foreground group-hover:text-primary transition-colors">INV-087</p><p className="text-[7px] text-muted-foreground">Feb 20</p></div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-[9px] font-bold text-foreground">$4,800</span>
+                                    <span className="text-[6px] font-semibold px-1.5 py-0.5 rounded bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">Paid</span>
                                 </div>
                             </div>
-                        ) : (
-                            <div className="py-6 flex flex-col items-center justify-center text-center">
-                                <Search className="w-6 h-6 text-muted-foreground/30 mb-2" />
-                                <h4 className="text-[10px] font-medium text-foreground/80 mb-1">No brief available</h4>
-                                <p className="text-[8px] text-muted-foreground max-w-[200px]">This project does not have a detailed brief or recent updates listed yet.</p>
+                            <div className="flex items-center justify-between p-2 hover:bg-accent/40 rounded-lg cursor-pointer transition-colors group">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-6 h-6 rounded-full border border-border/50 flex items-center justify-center shrink-0 group-hover:bg-primary/10 group-hover:border-primary/30 transition-colors"><DollarSign className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors" /></div>
+                                    <div><p className="text-[9px] font-bold text-foreground group-hover:text-primary transition-colors">INV-079</p><p className="text-[7px] text-muted-foreground">Jan 15</p></div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-[9px] font-bold text-foreground">$4,800</span>
+                                    <span className="text-[6px] font-semibold px-1.5 py-0.5 rounded bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">Paid</span>
+                                </div>
                             </div>
-                        )}
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         );
     }
