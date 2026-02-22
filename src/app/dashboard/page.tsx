@@ -35,107 +35,115 @@ export default async function DashboardPage() {
         })
     ]);
 
-    // Calculate real MRR from active Stripe subscriptions (amount is in cents)
     const estimatedMRR = subscriptions.reduce((sum, sub) => sum + (sub.amount / 100), 0);
 
     return (
-        <div className="space-y-8 animate-in fade-in-50">
+        <div className="space-y-8">
             <div>
-                <h2 className="text-3xl font-bold tracking-tight text-white mb-2">Overview</h2>
-                <p className="text-zinc-400">
-                    Here is your agency&apos;s performance at a glance.
+                <h2 className="text-2xl font-bold tracking-tight text-gray-900">Overview</h2>
+                <p className="text-gray-500 mt-1">
+                    Your agency&apos;s performance at a glance.
                 </p>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {/* Metric Cards - Dark Mode / Glassmorphic */}
-                <Card className="bg-zinc-900/50 border-white/5 backdrop-blur-sm shadow-xl">
+                <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-zinc-300">Monthly Revenue</CardTitle>
-                        <CreditCard className="h-4 w-4 text-violet-400" />
+                        <CardTitle className="text-sm font-medium text-gray-500">Monthly Revenue</CardTitle>
+                        <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                            <CreditCard className="h-4 w-4 text-emerald-600" />
+                        </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">${estimatedMRR.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                        <p className="text-xs text-zinc-500 mt-1">
+                        <div className="text-2xl font-bold text-gray-900">${estimatedMRR.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                        <p className="text-xs text-gray-400 mt-1">
                             Active Stripe Subscriptions
                         </p>
                     </CardContent>
                 </Card>
-                <Card className="bg-zinc-900/50 border-white/5 backdrop-blur-sm shadow-xl">
+                <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-zinc-300">Active Clients</CardTitle>
-                        <Users className="h-4 w-4 text-blue-400" />
+                        <CardTitle className="text-sm font-medium text-gray-500">Active Clients</CardTitle>
+                        <div className="h-8 w-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                            <Users className="h-4 w-4 text-blue-600" />
+                        </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">{activeClients}</div>
-                        <p className="text-xs text-zinc-500 mt-1">
+                        <div className="text-2xl font-bold text-gray-900">{activeClients}</div>
+                        <p className="text-xs text-gray-400 mt-1">
                             Across all plans
                         </p>
                     </CardContent>
                 </Card>
-                <Card className="bg-zinc-900/50 border-white/5 backdrop-blur-sm shadow-xl">
+                <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-zinc-300">Open Requests</CardTitle>
-                        <Activity className="h-4 w-4 text-emerald-400" />
+                        <CardTitle className="text-sm font-medium text-gray-500">Open Requests</CardTitle>
+                        <div className="h-8 w-8 rounded-lg bg-amber-50 flex items-center justify-center">
+                            <Activity className="h-4 w-4 text-amber-600" />
+                        </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">{openRequests}</div>
-                        <p className="text-xs text-zinc-500 mt-1">
-                            In Backlog, In Progress, In Review
+                        <div className="text-2xl font-bold text-gray-900">{openRequests}</div>
+                        <p className="text-xs text-gray-400 mt-1">
+                            Backlog, In Progress, In Review
                         </p>
                     </CardContent>
                 </Card>
-                <Card className="bg-zinc-900/50 border-white/5 backdrop-blur-sm shadow-xl">
+                <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-zinc-300">Completed Requests</CardTitle>
-                        <ArrowUpRight className="h-4 w-4 text-zinc-400" />
+                        <CardTitle className="text-sm font-medium text-gray-500">Completed</CardTitle>
+                        <div className="h-8 w-8 rounded-lg bg-violet-50 flex items-center justify-center">
+                            <ArrowUpRight className="h-4 w-4 text-violet-600" />
+                        </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">{completedRequests}</div>
-                        <p className="text-xs text-zinc-500 mt-1">
-                            Delivered securely
+                        <div className="text-2xl font-bold text-gray-900">{completedRequests}</div>
+                        <p className="text-xs text-gray-400 mt-1">
+                            Delivered successfully
                         </p>
                     </CardContent>
                 </Card>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-4 bg-zinc-900/50 border-white/5 backdrop-blur-sm shadow-xl">
+                <Card className="col-span-4 bg-white border border-gray-200 shadow-sm">
                     <CardHeader>
-                        <CardTitle className="text-white">Overview</CardTitle>
-                        <CardDescription className="text-zinc-400">Request completion volume over the last 30 days.</CardDescription>
+                        <CardTitle className="text-gray-900">Activity Chart</CardTitle>
+                        <CardDescription>Request completion volume over the last 30 days.</CardDescription>
                     </CardHeader>
-                    <CardContent className="pl-2 h-[350px] flex items-center justify-center bg-black/40 rounded-lg border border-white/5 m-4 border-dashed relative group overflow-hidden">
-                        {/* Abstract Chart Placeholder (Dark Mode) */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-violet-500/10 to-transparent opacity-50" />
-                        <div className="flex items-end gap-2 w-full h-full p-4 opacity-50">
+                    <CardContent className="pl-2 h-[350px] flex items-center justify-center bg-gray-50 rounded-lg border border-gray-100 m-4 border-dashed relative group overflow-hidden">
+                        <div className="flex items-end gap-2 w-full h-full p-4 opacity-40">
                             {[40, 70, 45, 90, 65, 80, 50, 100, 70].map((height, i) => (
-                                <div key={i} className="w-full bg-violet-500/20 border border-violet-500/30 rounded-t-sm transition-all duration-500 group-hover:bg-violet-500/40" style={{ height: `${height}%` }} />
+                                <div key={i} className="w-full bg-violet-200 border border-violet-300 rounded-t-sm transition-all duration-500 group-hover:bg-violet-400" style={{ height: `${height}%` }} />
                             ))}
                         </div>
-                        <p className="text-zinc-500 absolute font-medium">Chart Coming Soon</p>
+                        <p className="text-gray-400 absolute font-medium">Chart Coming Soon</p>
                     </CardContent>
                 </Card>
 
-                <Card className="col-span-3 bg-zinc-900/50 border-white/5 backdrop-blur-sm shadow-xl">
+                <Card className="col-span-3 bg-white border border-gray-200 shadow-sm">
                     <CardHeader>
-                        <CardTitle className="text-white">Recent Activity</CardTitle>
-                        <CardDescription className="text-zinc-400">
-                            Recent updates on your active requests.
+                        <CardTitle className="text-gray-900">Recent Activity</CardTitle>
+                        <CardDescription>
+                            Latest updates on your active requests.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         {recentActivity.length === 0 ? (
-                            <p className="text-sm text-zinc-500 text-center py-8">No recent activity.</p>
+                            <div className="text-center py-12">
+                                <Activity className="h-10 w-10 mx-auto text-gray-300 mb-3" />
+                                <p className="text-sm text-gray-400">No recent activity.</p>
+                                <p className="text-xs text-gray-400 mt-1">Create a request to get started.</p>
+                            </div>
                         ) : (
-                            <div className="space-y-6">
+                            <div className="space-y-4">
                                 {recentActivity.map((activity) => (
-                                    <div key={activity.id} className="flex items-center">
+                                    <div key={activity.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
                                         <div className="space-y-1">
-                                            <p className="text-sm font-medium text-white leading-none truncate max-w-[200px]">{activity.title}</p>
-                                            <p className="text-sm text-zinc-400">{activity.client.name} &bull; <span className="text-violet-400">{activity.status}</span></p>
+                                            <p className="text-sm font-medium text-gray-900 leading-none truncate max-w-[200px]">{activity.title}</p>
+                                            <p className="text-sm text-gray-500">{activity.client.name} · <span className="text-violet-600 font-medium">{activity.status}</span></p>
                                         </div>
-                                        <div className="ml-auto font-medium text-xs text-zinc-500 bg-white/5 px-2 py-1 rounded-md border border-white/5">
+                                        <div className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-md">
                                             {new Date(activity.updatedAt).toLocaleDateString()}
                                         </div>
                                     </div>

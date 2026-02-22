@@ -1,6 +1,9 @@
 import { db } from "@/lib/db";
 import { currentUser } from "@/lib/current-workspace";
 import { redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
+
 import { KanbanBoard } from "@/components/requests/kanban-board";
 import { CreateRequestDialog } from "@/components/requests/create-request-dialog";
 

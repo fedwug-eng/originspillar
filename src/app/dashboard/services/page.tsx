@@ -1,6 +1,9 @@
 import { db } from "@/lib/db";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { currentWorkspace } from "@/lib/current-workspace";
+
+export const dynamic = "force-dynamic";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { MoreHorizontal, Box } from "lucide-react";

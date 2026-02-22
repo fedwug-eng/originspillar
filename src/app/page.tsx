@@ -1,34 +1,30 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, LayoutDashboard, MessageSquare, CreditCard, ShieldCheck } from "lucide-react";
-import { MagicButton } from "@/components/ui/magic-button";
-import { Reveal } from "@/components/magic/reveal";
+import { ArrowRight, CheckCircle2, LayoutDashboard, MessageSquare, CreditCard, ShieldCheck, Sparkles, Zap } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-violet-500/30 overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden">
 
-      {/* 1. Navigation Bar */}
-      <header className="fixed top-0 w-full z-50 border-b border-white/5 bg-zinc-950/80 backdrop-blur-md">
+      {/* Navigation */}
+      <header className="fixed top-0 w-full z-50 border-b border-gray-100 bg-white/80 backdrop-blur-lg">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="h-6 w-6 rounded-md bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.3)]">
+            <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-md">
               <div className="h-2 w-2 rounded-full bg-white" />
             </div>
-            <span className="font-bold text-lg tracking-tight">Originspillar</span>
+            <span className="font-bold text-lg tracking-tight text-gray-900">Originspillar</span>
           </div>
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
-            <Link href="#features" className="hover:text-white transition-colors">Features</Link>
-            <Link href="#pricing" className="hover:text-white transition-colors">Pricing</Link>
-            <Link href="/sign-in" className="hover:text-white transition-colors">Login</Link>
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-500">
+            <Link href="#features" className="hover:text-gray-900 transition-colors">Features</Link>
+            <Link href="#pricing" className="hover:text-gray-900 transition-colors">Pricing</Link>
+            <Link href="/sign-in" className="hover:text-gray-900 transition-colors">Login</Link>
           </nav>
-          <div className="flex items-center gap-4">
-            <Link href="/sign-in" className="hidden md:inline-flex text-sm font-medium text-zinc-300 hover:text-white transition-colors">
+          <div className="flex items-center gap-3">
+            <Link href="/sign-in" className="hidden md:inline-flex text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
               Sign In
             </Link>
-            <Link href="/sign-up">
-              <MagicButton variant="secondary" className="px-5 py-2 text-xs">
-                Start Free Trial
-              </MagicButton>
+            <Link href="/sign-up" className="inline-flex items-center gap-2 rounded-lg bg-gray-900 text-white px-5 py-2.5 text-sm font-semibold hover:bg-gray-800 transition-colors shadow-md">
+              Start Free Trial
             </Link>
           </div>
         </div>
@@ -36,241 +32,208 @@ export default function Home() {
 
       <main className="flex-1 pt-16">
 
-        {/* 2. Hero Section */}
-        <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
-          {/* Subtle glowing aura */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] opacity-20 pointer-events-none z-0">
-            <div className="absolute inset-0 bg-violet-600 blur-[120px] rounded-full mix-blend-screen animate-pulse" style={{ animationDuration: '4s' }} />
-            <div className="absolute inset-0 bg-blue-600 blur-[120px] rounded-full mix-blend-screen translate-x-1/4 animate-pulse" style={{ animationDuration: '6s' }} />
-          </div>
+        {/* Hero Section */}
+        <section className="relative pt-24 pb-16 md:pt-40 md:pb-28">
+          {/* Subtle gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-violet-50/50 via-white to-white pointer-events-none" />
+          <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gradient-to-br from-violet-200/30 to-indigo-200/30 blur-[100px] rounded-full pointer-events-none" />
 
           <div className="container mx-auto px-6 relative z-10 text-center flex flex-col items-center">
 
-            <Reveal direction="down">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm font-medium text-zinc-300 mb-8 backdrop-blur-sm shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:border-violet-500/50 transition-colors cursor-default">
-                <span className="flex h-2 w-2 rounded-full bg-violet-500 shadow-[0_0_10px_rgba(139,92,246,0.8)] animate-pulse" />
-                Originspillar 1.0 is now live
-              </div>
-            </Reveal>
+            <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-1.5 text-sm font-medium text-violet-700 mb-8">
+              <Sparkles className="h-3.5 w-3.5" />
+              Originspillar 1.0 is now live
+            </div>
 
-            <Reveal delay={0.1}>
-              <h1 className="max-w-4xl text-5xl md:text-7xl font-bold tracking-tighter leading-[1.1] text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-400 mb-6 drop-shadow-sm">
-                Run your productized agency on autopilot.
-              </h1>
-            </Reveal>
+            <h1 className="max-w-4xl text-5xl md:text-7xl font-bold tracking-tighter leading-[1.1] text-gray-900 mb-6">
+              Run your productized agency on{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">autopilot.</span>
+            </h1>
 
-            <Reveal delay={0.2}>
-              <p className="max-w-2xl text-lg md:text-xl text-zinc-400 leading-relaxed mb-10">
-                Replace Stripe, Trello, and Slack with a single, white-labeled client portal. Originspillar gives you the enterprise polish to scale your agency without the admin chaos.
-              </p>
-            </Reveal>
+            <p className="max-w-2xl text-lg md:text-xl text-gray-500 leading-relaxed mb-10">
+              Replace Stripe, Trello, and Slack with a single, white-labeled client portal. Originspillar gives you the enterprise polish to scale your agency without the admin chaos.
+            </p>
 
-            <Reveal delay={0.3}>
-              <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-                <Link href="/sign-up" className="w-full sm:w-auto">
-                  <MagicButton variant="primary" className="w-full sm:w-auto h-14 text-base">
-                    Get Started for Free <ArrowRight className="w-4 h-4" />
-                  </MagicButton>
-                </Link>
-                <Link href="#features" className="w-full sm:w-auto">
-                  <MagicButton variant="outline" className="w-full sm:w-auto h-14 text-base backdrop-blur-sm">
-                    View Demo
-                  </MagicButton>
-                </Link>
-              </div>
-            </Reveal>
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+              <Link href="/sign-up" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-gray-900 text-white px-8 py-4 text-base font-semibold hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl">
+                Get Started for Free <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link href="#features" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white text-gray-700 px-8 py-4 text-base font-semibold hover:bg-gray-50 transition-all shadow-sm">
+                View Demo
+              </Link>
+            </div>
 
             {/* Abstract Dashboard Mockup */}
-            <Reveal delay={0.5} direction="up">
-              <div className="mt-20 w-full max-w-5xl rounded-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-2xl shadow-2xl p-4 md:p-8 transform perspective-[1500px] rotate-x-6 hover:rotate-x-0 transition-transform duration-700 ease-out group">
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent pointer-events-none rounded-2xl z-20" />
-                <div className="h-6 w-full flex items-center gap-2 border-b border-white/5 pb-4 mb-6 relative z-10">
-                  <div className="h-3 w-3 rounded-full bg-red-500/20 group-hover:bg-red-500/80 transition-colors" />
-                  <div className="h-3 w-3 rounded-full bg-yellow-500/20 group-hover:bg-yellow-500/80 transition-colors" />
-                  <div className="h-3 w-3 rounded-full bg-green-500/20 group-hover:bg-green-500/80 transition-colors" />
+            <div className="mt-20 w-full max-w-5xl rounded-2xl border border-gray-200 bg-white shadow-2xl shadow-gray-200/50 p-4 md:p-8 transform perspective-[1500px]">
+              <div className="h-6 w-full flex items-center gap-2 border-b border-gray-100 pb-4 mb-6">
+                <div className="h-3 w-3 rounded-full bg-red-400" />
+                <div className="h-3 w-3 rounded-full bg-yellow-400" />
+                <div className="h-3 w-3 rounded-full bg-green-400" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="col-span-1 border border-gray-100 rounded-xl bg-gray-50 p-6 h-56 flex flex-col space-y-3">
+                  <div className="h-4 w-24 bg-gray-200 rounded-md" />
+                  <div className="h-10 w-full bg-gray-100 rounded-md" />
+                  <div className="h-10 w-full bg-gray-100 rounded-md" />
+                  <div className="flex-1" />
+                  <div className="h-14 w-full bg-gradient-to-r from-violet-100 to-indigo-100 rounded-md border border-violet-200" />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-                  <div className="col-span-1 border border-white/5 rounded-xl bg-white/5 p-6 h-64 flex flex-col space-y-4">
-                    <div className="h-4 w-24 bg-white/10 rounded-md" />
-                    <div className="h-10 w-full bg-white/5 rounded-md" />
-                    <div className="h-10 w-full bg-white/5 rounded-md" />
-                    <div className="flex-1" />
-                    <div className="h-16 w-full bg-violet-600/20 rounded-md border border-violet-500/30 relative overflow-hidden">
-                      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-violet-400 to-transparent opacity-50" />
-                    </div>
+                <div className="col-span-2 border border-gray-100 rounded-xl bg-gray-50 p-6 h-56 flex flex-col space-y-3">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="h-4 w-32 bg-gray-200 rounded-md" />
+                    <div className="h-8 w-24 bg-gray-200 rounded-full" />
                   </div>
-                  <div className="col-span-2 border border-white/5 rounded-xl bg-white/5 p-6 h-64 flex flex-col space-y-4 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[50px] mix-blend-screen" />
-                    <div className="flex justify-between items-center mb-4">
-                      <div className="h-4 w-32 bg-white/10 rounded-md" />
-                      <div className="h-8 w-24 bg-white/10 rounded-full" />
-                    </div>
-                    <div className="flex-1 flex gap-4">
-                      <div className="w-1/3 bg-white/5 hover:bg-white/10 transition-colors rounded-lg flex flex-col gap-2 p-2"><div className="h-12 w-full bg-white/10 rounded-md"></div><div className="h-12 w-full bg-white/10 rounded-md"></div></div>
-                      <div className="w-1/3 bg-white/5 rounded-lg flex flex-col gap-2 p-2"><div className="h-12 w-full bg-blue-500/20 border border-blue-500/30 rounded-md shadow-[0_0_15px_rgba(59,130,246,0.15)]"></div></div>
-                      <div className="w-1/3 bg-white/5 rounded-lg flex flex-col gap-2 p-2"><div className="h-12 w-full bg-green-500/20 border border-green-500/30 rounded-md shadow-[0_0_15px_rgba(16,185,129,0.15)]"></div></div>
-                    </div>
+                  <div className="flex-1 flex gap-3">
+                    <div className="w-1/3 bg-white rounded-lg flex flex-col gap-2 p-2 border border-gray-100"><div className="h-12 w-full bg-gray-100 rounded-md"></div><div className="h-12 w-full bg-gray-100 rounded-md"></div></div>
+                    <div className="w-1/3 bg-white rounded-lg flex flex-col gap-2 p-2 border border-gray-100"><div className="h-12 w-full bg-blue-50 border border-blue-200 rounded-md"></div></div>
+                    <div className="w-1/3 bg-white rounded-lg flex flex-col gap-2 p-2 border border-gray-100"><div className="h-12 w-full bg-emerald-50 border border-emerald-200 rounded-md"></div></div>
                   </div>
                 </div>
               </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* 3. Bento Box Features Grid */}
-        <section id="features" className="py-24 md:py-32 relative border-t border-white/5 bg-zinc-950">
-          <div className="container mx-auto px-6">
-            <Reveal>
-              <div className="max-w-3xl mb-16">
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-                  Everything your agency needs.<br />
-                  <span className="text-zinc-500">Nothing you don&apos;t.</span>
-                </h2>
-                <p className="text-lg text-zinc-400">
-                  Consolidated tools mean less context switching for you, and a premium, frictionless experience for your clients.
-                </p>
-              </div>
-            </Reveal>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Box 1 (Large) */}
-              <Reveal delay={0.1}>
-                <div className="md:col-span-2 rounded-3xl border border-white/10 bg-white/5 p-8 flex flex-col justify-between overflow-hidden relative group h-full">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative z-10 mb-12 transform group-hover:-translate-y-2 transition-transform duration-500">
-                    <CreditCard className="w-8 h-8 text-blue-400 mb-4" />
-                    <h3 className="text-2xl font-bold text-white mb-2">One-Click Checkouts</h3>
-                    <p className="text-zinc-400 max-w-sm">Clients buy your services directly with Stripe. Subscriptions and invoices are handled automatically.</p>
-                  </div>
-                  <div className="relative z-10 w-full h-32 bg-zinc-900 border border-white/10 rounded-xl overflow-hidden shadow-2xl p-4 flex items-center justify-center transform group-hover:scale-105 transition-transform duration-500">
-                    <div className="flex items-center gap-3 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-4 py-2 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.2)]">
-                      <CheckCircle2 className="w-5 h-5" /> Payment Successful: $5,000.00
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-
-              {/* Box 2 (Medium) */}
-              <Reveal delay={0.2}>
-                <div className="md:col-span-1 border-white/10 bg-white/5 p-8 flex flex-col justify-between relative group rounded-3xl h-full border hover:border-violet-500/30 transition-colors">
-                  <div className="absolute inset-0 bg-gradient-to-bl from-violet-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
-                  <div className="relative z-10 flex flex-col h-full justify-between transform group-hover:translate-x-2 transition-transform duration-500">
-                    <div>
-                      <ShieldCheck className="w-8 h-8 text-violet-400 mb-4 drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]" />
-                      <h3 className="text-2xl font-bold text-white mb-2">Magic Routing</h3>
-                      <p className="text-zinc-400">Separate views for your internal team and your clients securely.</p>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-
-              {/* Box 3 (Medium) */}
-              <Reveal delay={0.3}>
-                <div className="md:col-span-1 rounded-3xl border border-white/10 bg-white/5 p-8 flex flex-col justify-between relative group h-full hover:border-pink-500/30 transition-colors">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
-                  <div className="relative z-10 flex flex-col h-full justify-between transform group-hover:translate-x-2 transition-transform duration-500">
-                    <div>
-                      <MessageSquare className="w-8 h-8 text-pink-400 mb-4 drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" />
-                      <h3 className="text-2xl font-bold text-white mb-2">In-App Chat</h3>
-                      <p className="text-zinc-400">Kill the email thread. Talk to clients directly on the specific task card.</p>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-
-              {/* Box 4 (Large) */}
-              <Reveal delay={0.4}>
-                <div className="md:col-span-2 rounded-3xl border border-white/10 bg-white/5 p-8 flex flex-col justify-between overflow-hidden relative group h-full">
-                  <div className="absolute inset-0 bg-gradient-to-tl from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative z-10 md:w-1/2 mb-8 md:mb-0 transform group-hover:-translate-y-2 transition-transform duration-500">
-                    <LayoutDashboard className="w-8 h-8 text-emerald-400 mb-4 drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]" />
-                    <h3 className="text-2xl font-bold text-white mb-2">Drag &amp; Drop Kanban</h3>
-                    <p className="text-zinc-400">Manage requests visually. Your clients see status updates in real-time as you drag cards across the board.</p>
-                  </div>
-                  {/* Abstract Kanban UI snippet */}
-                  <div className="absolute -bottom-10 -right-10 md:top-8 md:-right-10 w-[400px] h-[300px] bg-zinc-900 border border-white/10 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] p-4 rotate-[-5deg] group-hover:rotate-0 group-hover:-translate-x-4 group-hover:-translate-y-4 transition-all duration-700 ease-out">
-                    <div className="flex gap-4 h-full">
-                      <div className="w-1/2 rounded-lg bg-zinc-800/50 p-2 space-y-2">
-                        <div className="h-4 w-16 bg-zinc-700 rounded mb-4" />
-                        <div className="h-16 w-full bg-zinc-700/50 border border-zinc-600 rounded-md" />
-                        <div className="h-16 w-full bg-zinc-700/50 border border-zinc-600 rounded-md" />
-                      </div>
-                      <div className="w-1/2 rounded-lg bg-emerald-900/20 border border-emerald-500/30 p-2 space-y-2">
-                        <div className="h-4 w-16 bg-emerald-500/50 rounded mb-4 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                        <div className="h-20 w-full bg-zinc-800 border border-emerald-500/40 rounded-md shadow-[0_0_20px_rgba(16,185,129,0.2)] transform -translate-y-4 scale-105" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-
             </div>
           </div>
         </section>
 
-        {/* 4. Pricing Section */}
-        <section id="pricing" className="py-24 md:py-40 relative border-t border-white/5 bg-zinc-950 flex flex-col items-center">
-          <div className="container mx-auto px-6 max-w-5xl text-center">
-            <Reveal>
-              <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 text-white text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-500">Stop paying for 5 different apps.</h2>
-              <p className="text-xl text-zinc-400 mb-16 max-w-2xl mx-auto">
-                Consolidate your tech stack and look like a Fortune 500 agency for less than the cost of a Slack premium seat.
+        {/* Features Section */}
+        <section id="features" className="py-24 md:py-32 relative border-t border-gray-100 bg-gray-50">
+          <div className="container mx-auto px-6">
+            <div className="max-w-3xl mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 text-gray-900">
+                Everything your agency needs.<br />
+                <span className="text-gray-400">Nothing you don&apos;t.</span>
+              </h2>
+              <p className="text-lg text-gray-500">
+                Consolidated tools mean less context switching for you, and a premium, frictionless experience for your clients.
               </p>
-            </Reveal>
+            </div>
 
-            {/* Glowing Pricing Card */}
-            <Reveal delay={0.2} direction="up">
-              <div className="mx-auto max-w-lg rounded-3xl border border-violet-500/30 bg-zinc-900/80 backdrop-blur-xl p-10 md:p-12 shadow-[0_0_80px_-15px_rgba(139,92,246,0.3)] relative overflow-hidden group hover:border-violet-500/60 transition-colors">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-[200px] bg-violet-600/20 blur-[60px] pointer-events-none group-hover:bg-violet-600/30 transition-colors" />
-
-                <div className="relative z-10 flex flex-col items-center">
-                  <h3 className="text-lg font-bold text-violet-400 mb-4 uppercase tracking-wider">Pro Agency Plan</h3>
-                  <div className="flex items-baseline gap-2 mb-2">
-                    <span className="text-6xl font-extrabold text-white group-hover:scale-105 transition-transform drop-shadow-lg">$49</span>
-                    <span className="text-xl text-zinc-400 font-medium">/ month</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Feature 1 */}
+              <div className="md:col-span-2 rounded-2xl border border-gray-200 bg-white p-8 flex flex-col justify-between overflow-hidden relative group hover:shadow-lg transition-shadow h-full">
+                <div className="relative z-10 mb-8">
+                  <div className="h-12 w-12 rounded-xl bg-blue-50 flex items-center justify-center mb-4">
+                    <CreditCard className="w-6 h-6 text-blue-600" />
                   </div>
-                  <p className="text-sm text-zinc-400 mb-8 pb-8 border-b border-white/10 w-full text-center">
-                    Flat rate. No per-seat hidden fees.
-                  </p>
-
-                  <ul className="space-y-4 w-full text-left mb-10">
-                    {[
-                      "Unlimited Clients",
-                      "Unlimited Design Requests",
-                      "Stripe Payment Integration",
-                      "Custom Subscription Tiers",
-                      "Priority Email Support"
-                    ].map((feature, i) => (
-                      <li key={i} className="flex items-center gap-3 text-zinc-300">
-                        <CheckCircle2 className="w-5 h-5 text-violet-400 flex-shrink-0" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Link href="/sign-up" className="w-full">
-                    <MagicButton variant="secondary" className="w-full h-14 text-lg">
-                      Start 14-Day Free Trial
-                    </MagicButton>
-                  </Link>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">One-Click Checkouts</h3>
+                  <p className="text-gray-500 max-w-sm">Clients buy your services directly with Stripe. Subscriptions and invoices are handled automatically.</p>
+                </div>
+                <div className="relative z-10 w-full h-24 bg-emerald-50 border border-emerald-200 rounded-xl overflow-hidden p-4 flex items-center justify-center">
+                  <div className="flex items-center gap-3 text-emerald-700 font-semibold">
+                    <CheckCircle2 className="w-5 h-5" /> Payment Successful: $5,000.00
+                  </div>
                 </div>
               </div>
-            </Reveal>
+
+              {/* Feature 2 */}
+              <div className="md:col-span-1 rounded-2xl border border-gray-200 bg-white p-8 flex flex-col justify-between relative group h-full hover:shadow-lg transition-shadow">
+                <div>
+                  <div className="h-12 w-12 rounded-xl bg-violet-50 flex items-center justify-center mb-4">
+                    <ShieldCheck className="w-6 h-6 text-violet-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Magic Routing</h3>
+                  <p className="text-gray-500">Separate views for your internal team and your clients securely.</p>
+                </div>
+              </div>
+
+              {/* Feature 3 */}
+              <div className="md:col-span-1 rounded-2xl border border-gray-200 bg-white p-8 flex flex-col justify-between relative group h-full hover:shadow-lg transition-shadow">
+                <div>
+                  <div className="h-12 w-12 rounded-xl bg-pink-50 flex items-center justify-center mb-4">
+                    <MessageSquare className="w-6 h-6 text-pink-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">In-App Chat</h3>
+                  <p className="text-gray-500">Kill the email thread. Talk to clients directly on the specific task card.</p>
+                </div>
+              </div>
+
+              {/* Feature 4 */}
+              <div className="md:col-span-2 rounded-2xl border border-gray-200 bg-white p-8 flex flex-col justify-between overflow-hidden relative group h-full hover:shadow-lg transition-shadow">
+                <div className="relative z-10 md:w-1/2 mb-8 md:mb-0">
+                  <div className="h-12 w-12 rounded-xl bg-emerald-50 flex items-center justify-center mb-4">
+                    <LayoutDashboard className="w-6 h-6 text-emerald-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Drag &amp; Drop Kanban</h3>
+                  <p className="text-gray-500">Manage requests visually. Your clients see status updates in real-time as you drag cards across the board.</p>
+                </div>
+                {/* Mini Kanban */}
+                <div className="absolute -bottom-8 -right-8 md:top-8 md:-right-8 w-[350px] h-[250px] bg-gray-50 border border-gray-200 rounded-2xl shadow-lg p-4 rotate-[-3deg] group-hover:rotate-0 group-hover:-translate-x-2 transition-all duration-500">
+                  <div className="flex gap-3 h-full">
+                    <div className="w-1/2 rounded-lg bg-white p-2 space-y-2 border border-gray-100">
+                      <div className="h-3 w-14 bg-gray-200 rounded mb-3" />
+                      <div className="h-14 w-full bg-gray-100 border border-gray-200 rounded-md" />
+                      <div className="h-14 w-full bg-gray-100 border border-gray-200 rounded-md" />
+                    </div>
+                    <div className="w-1/2 rounded-lg bg-emerald-50 border border-emerald-200 p-2 space-y-2">
+                      <div className="h-3 w-14 bg-emerald-200 rounded mb-3" />
+                      <div className="h-16 w-full bg-white border border-emerald-200 rounded-md shadow-sm" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing Section */}
+        <section id="pricing" className="py-24 md:py-40 relative border-t border-gray-100 bg-white flex flex-col items-center">
+          <div className="container mx-auto px-6 max-w-5xl text-center">
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 text-gray-900">Stop paying for 5 different apps.</h2>
+            <p className="text-xl text-gray-500 mb-16 max-w-2xl mx-auto">
+              Consolidate your tech stack and look like a Fortune 500 agency for less than the cost of a Slack premium seat.
+            </p>
+
+            {/* Pricing Card */}
+            <div className="mx-auto max-w-lg rounded-2xl border-2 border-violet-200 bg-white p-10 md:p-12 shadow-xl shadow-violet-100/50 relative overflow-hidden group hover:border-violet-400 transition-colors">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-indigo-500" />
+
+              <div className="flex flex-col items-center">
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-violet-600 uppercase tracking-wider bg-violet-50 px-3 py-1 rounded-full mb-6">
+                  <Zap className="h-3 w-3" /> Most Popular
+                </span>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Pro Agency Plan</h3>
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-6xl font-extrabold text-gray-900">$49</span>
+                  <span className="text-xl text-gray-400 font-medium">/ month</span>
+                </div>
+                <p className="text-sm text-gray-500 mb-8 pb-8 border-b border-gray-100 w-full text-center">
+                  Flat rate. No per-seat hidden fees.
+                </p>
+
+                <ul className="space-y-4 w-full text-left mb-10">
+                  {[
+                    "Unlimited Clients",
+                    "Unlimited Design Requests",
+                    "Stripe Payment Integration",
+                    "Custom Subscription Tiers",
+                    "Priority Email Support"
+                  ].map((feature, i) => (
+                    <li key={i} className="flex items-center gap-3 text-gray-700">
+                      <CheckCircle2 className="w-5 h-5 text-violet-500 flex-shrink-0" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link href="/sign-up" className="w-full inline-flex items-center justify-center rounded-lg bg-gray-900 text-white px-6 py-4 text-base font-semibold hover:bg-gray-800 transition-all shadow-lg">
+                  Start 14-Day Free Trial
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
       </main>
 
-      {/* 5. Minimal Footer */}
-      <footer className="w-full border-t border-white/5 bg-zinc-950 py-10">
+      {/* Footer */}
+      <footer className="w-full border-t border-gray-100 bg-gray-50 py-10">
         <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-gray-400">
             &copy; 2026 Originspillar. Built for productized agencies.
           </p>
-          <div className="flex gap-6 text-sm text-zinc-500">
-            <Link href="#" className="hover:text-zinc-300 transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-zinc-300 transition-colors">Terms of Service</Link>
-            <Link href="#" className="hover:text-zinc-300 transition-colors">Twitter (X)</Link>
+          <div className="flex gap-6 text-sm text-gray-400">
+            <Link href="#" className="hover:text-gray-600 transition-colors">Privacy Policy</Link>
+            <Link href="#" className="hover:text-gray-600 transition-colors">Terms of Service</Link>
+            <Link href="#" className="hover:text-gray-600 transition-colors">Twitter (X)</Link>
           </div>
         </div>
       </footer>

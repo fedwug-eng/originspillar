@@ -1,5 +1,8 @@
 import { db } from "@/lib/db";
 import { currentWorkspace } from "@/lib/current-workspace";
+
+export const dynamic = "force-dynamic";
+
 import { Button } from "@/components/ui/button";
 import { Search, MoreHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
