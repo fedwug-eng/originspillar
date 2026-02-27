@@ -179,16 +179,53 @@ function OverviewView({ onNav }: { onNav: (id: string) => void }) {
                     <div><p className="text-[10px] font-semibold text-foreground/80">Revenue Overview</p><p className="text-[7px] text-muted-foreground">Last 12 months</p></div>
                     <div className="flex items-center gap-1 bg-emerald-400/10 px-1.5 py-0.5 rounded group-hover:bg-emerald-400/20 transition-colors"><TrendingUp className="w-3 h-3 text-emerald-400" /><span className="text-[8px] font-semibold text-emerald-400">+22%</span></div>
                 </div>
-                <div className="flex items-end gap-1 h-[70px]">
-                    {revenueData.map((h, i) => {
-                        const pct = (h / maxVal) * 100;
-                        return (
-                            <div key={i} className="flex-1 flex flex-col items-center gap-0.5 hover:bg-accent/50 rounded-md transition-colors p-0.5">
-                                <div className={`w-full rounded-sm transition-all hover:scale-x-110 ${i >= 10 ? "bg-gradient-to-t from-primary to-primary/60" : i >= 8 ? "bg-primary/35" : "bg-muted"}`} style={{ height: `${pct}%` }} />
-                                <span className="text-[6px] text-muted-foreground">{months[i]}</span>
-                            </div>
-                        );
-                    })}
+                <div className="relative h-[80px] w-full mt-2">
+                    {/* Y-axis grid lines */}
+                    <div className="absolute inset-0 flex flex-col justify-between">
+                        <div className="w-full border-t border-border/40 border-dashed"></div>
+                        <div className="w-full border-t border-border/40 border-dashed"></div>
+                        <div className="w-full border-t border-border/40 border-dashed"></div>
+                        <div className="w-full border-t border-border/40 border-solid"></div>
+                    </div>
+                    {/* SVG Line Chart */}
+                    <svg className="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
+                        <defs>
+                            <linearGradient id="line-gradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="currentColor" className="text-primary" stopOpacity="0.4" />
+                                <stop offset="100%" stopColor="currentColor" className="text-primary" stopOpacity="0" />
+                            </linearGradient>
+                        </defs>
+                        <path
+                            d={`M 0,100 ${revenueData.map((val, i) => `L ${i * (100 / 11)},${100 - (val / maxVal) * 90}`).join(' ')} L 100,100 Z`}
+                            fill="url(#line-gradient)"
+                        />
+                        <path
+                            d={`M ${revenueData.map((val, i) => `${i === 0 ? '' : 'L'} ${i * (100 / 11)},${100 - (val / maxVal) * 90}`).join(' ')}`}
+                            fill="none"
+                            stroke="currentColor"
+                            className="text-primary"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+                        {/* Data Points */}
+                        {revenueData.map((val, i) => (
+                            <circle
+                                key={i}
+                                cx={i * (100 / 11)}
+                                cy={100 - (val / maxVal) * 90}
+                                r="2.5"
+                                fill="currentColor"
+                                className="text-card stroke-primary stroke-[1.5px] transition-transform hover:scale-150 cursor-pointer"
+                            />
+                        ))}
+                    </svg>
+                    {/* X-axis labels */}
+                    <div className="absolute -bottom-4 left-0 right-0 flex justify-between">
+                        {months.map((m, i) => (
+                            <span key={i} className="text-[6px] text-muted-foreground font-medium">{m}</span>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
@@ -502,6 +539,7 @@ function RequestsView() {
 function CommunicationsView() {
     const [selectedClient, setSelectedClient] = useState<number | null>(null);
     const [expandedClient, setExpandedClient] = useState<number | null>(null);
+    const [selectedProject, setSelectedProject] = useState<string | null>(null);
     const selected = selectedClient !== null ? commClients[selectedClient] : null;
 
     return (
@@ -526,7 +564,11 @@ function CommunicationsView() {
                                 {expandedClient === i && c.projects && (
                                     <div className="px-4 pb-2 space-y-1">
                                         {c.projects.map((p, j) => (
-                                            <div key={j} className="flex items-center justify-between py-1 px-2 rounded-md hover:bg-accent/50 cursor-pointer">
+                                            <div
+                                                key={j}
+                                                onClick={(e) => { e.stopPropagation(); setSelectedProject(p); }}
+                                                className={`flex items-center justify-between py-1 px-2 rounded-md hover:bg-accent/50 cursor-pointer ${selectedProject === p ? 'bg-accent border border-border/50' : ''}`}
+                                            >
                                                 <div className="flex items-center gap-1.5"><FolderKanban className="w-2.5 h-2.5 text-muted-foreground" /><span className="text-[8px] text-muted-foreground">{p}</span></div>
                                                 {j < 2 && <div className="w-3.5 h-3.5 rounded-full bg-primary flex items-center justify-center"><span className="text-[6px] font-bold text-white">{j === 0 ? 2 : 1}</span></div>}
                                                 <ChevronRight className="w-2.5 h-2.5 text-muted-foreground/40" />
@@ -538,8 +580,64 @@ function CommunicationsView() {
                         ))}
                     </div>
                 </div>
-                <div className="col-span-3 bg-card border border-border rounded-xl flex items-center justify-center">
-                    {selected ? (
+                <div className="col-span-3 bg-card border border-border rounded-xl flex flex-col overflow-hidden relative">
+                    {selected && selectedProject ? (
+                        <div className="absolute inset-0 flex flex-col animate-in fade-in duration-200">
+                            {/* Chat Header */}
+                            <div className="p-3 border-b border-border flex items-center justify-between bg-card shrink-0">
+                                <div className="flex items-center gap-2">
+                                    <div className={`w-6 h-6 rounded-lg ${selected.color} flex items-center justify-center`}><span className="text-[8px] font-bold text-white">{selected.initials}</span></div>
+                                    <div><p className="text-[10px] font-bold text-foreground">{selected.name}</p><p className="text-[8px] text-muted-foreground">{selectedProject}</p></div>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <button className="w-6 h-6 rounded-md hover:bg-accent flex items-center justify-center text-muted-foreground transition-colors"><search className="w-3 h-3" /></button>
+                                </div>
+                            </div>
+
+                            {/* Chat Messages */}
+                            <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-muted/10">
+                                <div className="flex justify-center"><span className="text-[7px] font-medium text-muted-foreground bg-accent/50 px-2 py-0.5 rounded-full">Today, 9:41 AM</span></div>
+
+                                {/* Client Message */}
+                                <div className="flex items-end gap-1.5">
+                                    <div className={`w-5 h-5 rounded-full ${selected.color} flex items-center justify-center shrink-0 mb-0.5`}><span className="text-[6px] font-bold text-white">{selected.initials}</span></div>
+                                    <div className="bg-card border border-border/60 rounded-2xl rounded-bl-sm p-2.5 max-w-[85%] shadow-sm">
+                                        <p className="text-[9px] text-foreground leading-relaxed">Hey! Just checking in on the progress for the {selectedProject}. Are we still on track for Friday's review?</p>
+                                    </div>
+                                </div>
+
+                                {/* Client Message 2 */}
+                                <div className="flex flex-col items-start gap-1.5 pl-6.5">
+                                    <div className="bg-card border border-border/60 rounded-2xl rounded-tl-sm p-2.5 max-w-[85%] shadow-sm">
+                                        <p className="text-[9px] text-foreground leading-relaxed">Also, I attached the new brand assets you requested.</p>
+                                    </div>
+                                    <div className="flex items-center gap-1.5 bg-card border border-border/60 p-1.5 rounded-lg cursor-pointer hover:border-primary/30 transition-colors shadow-sm w-36">
+                                        <div className="w-6 h-6 rounded bg-amber-500/10 flex items-center justify-center border border-amber-500/20"><Paperclip className="w-3 h-3 text-amber-500" /></div>
+                                        <div className="min-w-0"><p className="text-[8px] font-medium text-foreground truncate">brand-assets.zip</p><p className="text-[6px] text-muted-foreground">12.4 MB</p></div>
+                                    </div>
+                                    <span className="text-[6px] text-muted-foreground ml-1">9:43 AM</span>
+                                </div>
+
+                                {/* Agency Message */}
+                                <div className="flex items-end justify-end gap-1.5 mt-4">
+                                    <div className="bg-primary text-primary-foreground rounded-2xl rounded-br-sm p-2.5 max-w-[85%] shadow-sm">
+                                        <p className="text-[9px] leading-relaxed text-white">Hi! Yes, everything is right on schedule. I've received the assets and we're integrating them now. I'll send over the preview link by Thursday evening!</p>
+                                    </div>
+                                    <div className="w-5 h-5 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0 mb-0.5"><span className="text-[6px] font-bold text-primary">JD</span></div>
+                                </div>
+                                <div className="flex justify-end"><span className="text-[6px] text-muted-foreground mr-7">Just now · Read</span></div>
+                            </div>
+
+                            {/* Input Area */}
+                            <div className="p-2 border-t border-border bg-card shrink-0">
+                                <div className="flex items-center gap-1.5 bg-accent/50 border border-border rounded-xl pr-1.5 pl-3 py-1.5 focus-within:ring-1 focus-within:border-primary transition-all">
+                                    <input type="text" placeholder="Type a message..." className="flex-1 bg-transparent text-[9px] text-foreground outline-none placeholder:text-muted-foreground/50" />
+                                    <button className="w-6 h-6 rounded-lg hover:bg-accent border border-transparent flex items-center justify-center text-muted-foreground transition-colors"><Paperclip className="w-3 h-3" /></button>
+                                    <button className="w-6 h-6 rounded-lg bg-primary hover:bg-primary/90 flex items-center justify-center text-white transition-colors shadow-sm"><span className="text-[8px] font-bold tracking-tight px-1">Send</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    ) : selected ? (
                         <div className="text-center p-4">
                             <div className={`w-10 h-10 rounded-xl ${commClients[selectedClient!].color} flex items-center justify-center mx-auto mb-2`}><span className="text-sm font-bold text-white">{commClients[selectedClient!].initials}</span></div>
                             <p className="text-xs font-semibold text-foreground">{selected.name}</p>
