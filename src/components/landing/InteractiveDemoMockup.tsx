@@ -6,7 +6,7 @@ import {
     BarChart3, FolderKanban, Users, DollarSign, Settings, Search,
     Package, MessageSquare, Bell, ChevronRight, TrendingUp, CheckCircle2,
     Clock, Star, Key, Plus, User, Palette, Shield, CreditCard,
-    BellRing, Building2, LogOut, Calendar, Upload, File, FileText, Image as ImageIcon, Paperclip, AlertCircle
+    BellRing, Building2, LogOut, Calendar, Upload, File, FileText, Image as ImageIcon, Paperclip, AlertCircle, Server, Activity, Network
 } from "lucide-react";
 
 /* ════════════════════════════════════════════════════════════════════
@@ -21,6 +21,7 @@ const sidebarLinks = [
     { label: "Services", icon: Package, id: "services" },
     { label: "Billing", icon: DollarSign, id: "billing" },
     { label: "Settings", icon: Settings, id: "settings" },
+    { label: "API Gateway", icon: Network, id: "api-gateway" },
 ];
 
 const overviewMetrics = [
@@ -839,6 +840,113 @@ function SettingsView() {
     );
 }
 
+function ApiGatewayView() {
+    const [generating, setGenerating] = useState(false);
+    const [key, setKey] = useState<string | null>(null);
+
+    const handleGenerate = () => {
+        setGenerating(true);
+        setTimeout(() => {
+            setKey("sk_gw_9x8c...4fj2");
+            setGenerating(false);
+        }, 800);
+    };
+
+    return (
+        <div className="space-y-4 max-w-2xl animate-in fade-in zoom-in-95 duration-300">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h2 className="text-sm font-bold text-foreground">API Gateway</h2>
+                    <p className="text-[10px] text-muted-foreground">Manage your AI upstream endpoints and issue keys.</p>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="flex items-center gap-1.5 text-[9px] font-medium text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Gateway Active
+                    </span>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+                <div className="bg-card border border-border/60 rounded-xl p-4 shadow-sm relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -z-10 transition-transform group-hover:scale-110" />
+                    <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20"><Server className="w-4 h-4 text-emerald-500" /></div>
+                        <div>
+                            <p className="text-[11px] font-bold text-foreground">OpenAI</p>
+                            <p className="text-[8px] text-muted-foreground">Connected • GPT-4o, o3-mini</p>
+                        </div>
+                    </div>
+                    <p className="text-[9px] text-muted-foreground/80 leading-relaxed mb-3">Your agency OpenAI key is securely vaulted here. Ready to proxy requests.</p>
+                    <button className="text-[9px] font-medium text-emerald-500 hover:text-emerald-400 transition-colors">Manage Credentials →</button>
+                </div>
+
+                <div className="bg-card border border-border/60 rounded-xl p-4 shadow-sm">
+                    <div className="flex items-center justify-between mb-2">
+                        <p className="text-[10px] font-bold text-foreground">Client Keys</p>
+                        <Key className="w-3.5 h-3.5 text-muted-foreground" />
+                    </div>
+                    <p className="text-[9px] text-muted-foreground mb-3">Issue rate-limited keys tied to specific clients.</p>
+
+                    {key ? (
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between bg-accent/50 border border-border rounded-lg px-3 py-2">
+                                <code className="text-[10px] font-mono text-primary font-bold">{key}</code>
+                                <span className="text-[8px] font-semibold text-emerald-500 px-1.5 py-0.5 rounded bg-emerald-500/10">Active</span>
+                            </div>
+                            <p className="text-[7px] text-muted-foreground text-center animate-pulse">Requesting via proxy enabled</p>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={handleGenerate}
+                            disabled={generating}
+                            className="w-full flex items-center justify-center gap-2 bg-primary/10 hover:bg-primary/15 text-primary border border-primary/20 transition-all rounded-lg py-1.5 text-[9px] font-bold"
+                        >
+                            {generating ? <Activity className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
+                            {generating ? "Generating..." : "Generate New Key"}
+                        </button>
+                    )}
+                </div>
+            </div>
+
+            <div className="bg-card border border-border/60 rounded-xl p-4 shadow-sm">
+                <div className="flex items-center justify-between mb-3">
+                    <div>
+                        <p className="text-[10px] font-bold text-foreground">Live Inference Usage</p>
+                        <p className="text-[8px] text-muted-foreground">Tracking upstream proxy requests</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div className="flex flex-col text-right">
+                            <span className="text-[11px] font-bold text-emerald-500">+$28.40</span>
+                            <span className="text-[7px] text-muted-foreground">Profit Generated</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="space-y-1 mt-2">
+                    <div className="grid grid-cols-4 px-2 py-1 text-[7px] font-semibold text-muted-foreground border-b border-border/50">
+                        <div className="col-span-1">Client Key</div>
+                        <div className="col-span-1">Model</div>
+                        <div className="col-span-1 text-right">Tokens</div>
+                        <div className="col-span-1 text-right">Latency</div>
+                    </div>
+                    {[
+                        { k: "ext_crm_bot", m: "gpt-4o", t: "1,240", l: "840ms", c: "text-emerald-500" },
+                        { k: "support_agent", m: "claude-3", t: "890", l: "1250ms", c: "text-emerald-500" },
+                        { k: "ext_crm_bot", m: "gpt-4o", t: "4,100", l: "2100ms", c: "text-emerald-500" },
+                    ].map((row, i) => (
+                        <div key={i} className="grid grid-cols-4 px-2 py-1.5 items-center hover:bg-accent/40 rounded transition-colors group cursor-pointer">
+                            <div className="col-span-1 text-[8px] font-medium text-foreground">{row.k}</div>
+                            <div className="col-span-1 text-[8px] text-muted-foreground font-mono">{row.m}</div>
+                            <div className="col-span-1 text-[8px] text-muted-foreground text-right">{row.t}</div>
+                            <div className={`col-span-1 text-[8px] ${row.c} text-right`}>{row.l}</div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 /* ════════════════════════════════════════════════════════════════════
    MAIN COMPONENT
    ════════════════════════════════════════════════════════════════════ */
@@ -855,6 +963,7 @@ export default function InteractiveDemoMockup() {
             case "services": return <ServicesView />;
             case "billing": return <BillingView />;
             case "settings": return <SettingsView />;
+            case "api-gateway": return <ApiGatewayView />;
             default: return <OverviewView onNav={setActiveTab} />;
         }
     };

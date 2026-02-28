@@ -6,7 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
     BarChart3, FolderKanban, Users, DollarSign, Settings, Search,
-    Menu, X, Package, MessageSquare
+    Menu, X, Package, MessageSquare, Network, Server, Key, Activity
 } from "lucide-react";
 import { UserButton } from "@clerk/nextjs";
 import NotificationBell from "@/components/dashboard/NotificationBell";
@@ -19,6 +19,13 @@ const sidebarLinks = [
     { label: "Services", icon: Package, to: "/dashboard/services", badge: 0 },
     { label: "Billing", icon: DollarSign, to: "/dashboard/billing", badge: 0 },
     { label: "Settings", icon: Settings, to: "/dashboard/settings", badge: 0 },
+];
+
+const apiGatewayLinks = [
+    { label: "Overview", icon: Network, to: "/dashboard/api-gateway" },
+    { label: "Providers", icon: Server, to: "/dashboard/api-gateway/providers" },
+    { label: "Gateway Keys", icon: Key, to: "/dashboard/api-gateway/keys" },
+    { label: "Usage & Logs", icon: Activity, to: "/dashboard/api-gateway/usage" },
 ];
 
 function SidebarContent({ pathname, unreadCount, onNav }: { pathname: string; unreadCount: number; onNav?: () => void }) {
@@ -40,33 +47,61 @@ function SidebarContent({ pathname, unreadCount, onNav }: { pathname: string; un
             </div>
 
             {/* Nav links */}
-            <nav className="flex-1 px-4 py-6 space-y-1.5">
-                {sidebarLinks.map((link) => {
-                    const isActive = link.to === "/dashboard"
-                        ? pathname === "/dashboard"
-                        : pathname.startsWith(link.to);
-                    const badge = link.useBadge ? unreadCount : link.badge;
+            <nav className="flex-1 px-4 py-6 overflow-y-auto space-y-6">
+                <div className="space-y-1.5">
+                    {sidebarLinks.map((link) => {
+                        const isActive = link.to === "/dashboard"
+                            ? pathname === "/dashboard"
+                            : pathname.startsWith(link.to);
+                        const badge = link.useBadge ? unreadCount : link.badge;
 
-                    return (
-                        <Link
-                            key={link.to}
-                            href={link.to}
-                            onClick={onNav}
-                            className={`flex items-center gap-3.5 px-5 py-3 rounded-xl text-[15px] font-medium transition-all duration-200 ${isActive
-                                ? "bg-primary/10 text-primary border border-primary/15 shadow-sm"
-                                : "text-muted-foreground hover:text-foreground hover:bg-accent border border-transparent"
-                                }`}
-                        >
-                            <link.icon className="w-5 h-5" />
-                            <span className="flex-1">{link.label}</span>
-                            {badge > 0 && (
-                                <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                                    <span className="text-[10px] font-bold text-white">{badge}</span>
-                                </div>
-                            )}
-                        </Link>
-                    );
-                })}
+                        return (
+                            <Link
+                                key={link.to}
+                                href={link.to}
+                                onClick={onNav}
+                                className={`flex items-center gap-3.5 px-5 py-3 rounded-xl text-[15px] font-medium transition-all duration-200 ${isActive
+                                    ? "bg-primary/10 text-primary border border-primary/15 shadow-sm"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-accent border border-transparent"
+                                    }`}
+                            >
+                                <link.icon className="w-5 h-5" />
+                                <span className="flex-1">{link.label}</span>
+                                {badge > 0 && (
+                                    <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                                        <span className="text-[10px] font-bold text-white">{badge}</span>
+                                    </div>
+                                )}
+                            </Link>
+                        );
+                    })}
+                </div>
+
+                <div>
+                    <h4 className="px-5 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <Network className="w-4 h-4" /> API Gateway
+                    </h4>
+                    <div className="space-y-1.5">
+                        {apiGatewayLinks.map((link) => {
+                            const isActive = pathname.startsWith(link.to);
+
+                            return (
+                                <Link
+                                    key={link.to}
+                                    href={link.to}
+                                    onClick={onNav}
+                                    className={`flex items-center gap-3.5 px-5 py-3 rounded-xl text-[15px] font-medium transition-all duration-200 ${isActive
+                                        ? "bg-primary/10 text-primary border border-primary/15 shadow-sm"
+                                        : "text-muted-foreground hover:text-foreground hover:bg-accent border border-transparent"
+                                        }`}
+                                >
+                                    <link.icon className="w-5 h-5" />
+                                    <span className="flex-1">{link.label}</span>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </div>
             </nav>
 
             {/* User */}

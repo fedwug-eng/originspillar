@@ -32,6 +32,11 @@ model Workspace {
   messages      Message[]
   activityLogs  ActivityLog[]
   apiKeys       ApiKey[]
+  
+  // API Gateway Relations
+  providerCredentials ProviderCredential[]
+  gatewayKeys     GatewayKey[]
+  usageRecords    UsageRecord[]
 }
 
 model User {
@@ -222,4 +227,93 @@ model ApiKey {
   updatedAt   DateTime @updatedAt
 
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── API Gateway Models ────────────────────────────────────────
+
+model ProviderCredential {
+  id            String   @id @default(cuid())
+  provider      String   // openai, anthropic, deepseek, or custom name
+  providerType  String   @default("builtin") // builtin or custom
+  keyName       String   // User-friendly name
+  encryptedKey  String   // Encrypted API key
+  keyPreview    String   // Last 4 chars for display
+  
+  endpointUrl   String?  // Custom API endpoint URL
+  models        String?  // JSON array of available models: ["model-1", "model-2"]
+  apiFormat     String   @default("openai") // openai, anthropic
+  
+  isActive      Boolean  @default(true)
+  lastUsedAt    DateTime?
+  
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model GatewayKey {
+  id                  String   @id @default(cuid())
+  keyPrefix           String   // For lookup: "af_abc123xx" (first 10 chars)
+  keyName             String   // User-friendly: "Production Key"
+  keyHash             String   // Hash - NEVER decryptable
+  
+  rateLimitRpm        Int      @default(60)
+  rateLimitRpd        Int      @default(10000)
+  maxTokensPerRequest Int      @default(128000)
+  
+  status              String   @default("active") // active, expired, revoked
+  lastUsedAt          DateTime?
+  expiresAt           DateTime?
+  
+  workspaceId         String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  workspace           Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  usageRecords        UsageRecord[]
+
+  @@unique([workspaceId, keyPrefix])
+  @@index([keyPrefix])
+}
+
+model UsageRecord {
+  id              String   @id @default(cuid())
+  endpoint        String   // /chat, /embeddings, etc.
+  model           String   // gpt-4, claude-3-opus, etc.
+  provider        String   // openai, anthropic, deepseek
+  
+  promptTokens    Int      @default(0)
+  completionTokens Int     @default(0)
+  totalTokens     Int      @default(0)
+  
+  providerCost    Float    @default(0) // What provider charges company
+  markupApplied   Float    @default(0) // Company's markup amount
+  agencyCost      Float    @default(0) // Total charged by agency
+  
+  latency         Int      @default(0) // Response time in ms
+  statusCode      Int      @default(200)
+  errorMessage    String?
+  ipAddress       String?
+  userAgent       String?
+  
+  gatewayKeyId    String?
+  workspaceId     String
+  createdAt       DateTime @default(now())
+  
+  gatewayKey      GatewayKey? @relation(fields: [gatewayKeyId], references: [id], onDelete: SetNull)
+  workspace       Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  @@index([workspaceId, createdAt])
+  @@index([workspaceId, provider])
+}
+
+model PricingOracle {
+  id              String   @id @default(cuid())
+  model           String   @unique
+  provider        String
+  promptCostPerM  Float    // Cost per 1M prompt tokens in USD
+  completionCostPerM Float // Cost per 1M completion tokens in USD
+  updatedAt       DateTime @updatedAt
 }
